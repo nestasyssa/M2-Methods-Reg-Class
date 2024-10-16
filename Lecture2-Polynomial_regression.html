@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Katia Meziani" />
+
+
+<title>Polynomial regression model</title>
+
+<script src="Lecture2-Polynomial_regression_files/header-attrs-2.28/header-attrs.js"></script>
+<script src="Lecture2-Polynomial_regression_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Lecture2-Polynomial_regression_files/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="Lecture2-Polynomial_regression_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Lecture2-Polynomial_regression_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Lecture2-Polynomial_regression_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="Lecture2-Polynomial_regression_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="Lecture2-Polynomial_regression_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="Lecture2-Polynomial_regression_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="Lecture2-Polynomial_regression_files/navigation-1.1/tabsets.js"></script>
+<script src="Lecture2-Polynomial_regression_files/navigation-1.1/codefolding.js"></script>
+<link href="Lecture2-Polynomial_regression_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="Lecture2-Polynomial_regression_files/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="Lecture2-Polynomial_regression_files/kePrint-0.0.1/kePrint.js"></script>
+<link href="Lecture2-Polynomial_regression_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Polynomial regression model</h1>
+<h3 class="subtitle">Methods for Regression and classification</h3>
+<h4 class="author">Katia Meziani</h4>
+
+</div>
+
+
+<style>
+  .attention {
+    font-size: 24px;
+    color: red;
+    font-weight: bold;
+  }
+  
+  
+
+  
+  
+</style>
+<style>
+    .underline {
+      text-decoration: underline;
+    }
+  </style>
+<style contenteditable>
+  .brd {
+    border: 2px solid black; ; padding: 5px
+  }
+</style>
+<style contenteditable>
+  .brdred {
+    border: 2px solid #B22222 ; 
+    padding: 10px; /* Ajouter de l'espace autour du texte */
+    background-color: #f9f9f9; /* Optionnel : couleur de fond pour le texte */
+    margin: 10px 0; /* Ajouter de l'espace au-dessus et en-dessous de l'encadrement */
+  }
+</style>
+<style>
+  .solution {
+    font-size: 24px;
+    color: yellow; /* Couleur jaune pour simuler la lumière */
+  }
+</style>
+<style>
+    .underline {
+      text-decoration: underline;
+    }
+  </style>
+<style>
+  .brdgreen {
+    border: 2px solid green; /* Bordure verte */
+    padding: 10px; /* Espace interne */
+    background-color: rgba(114, 213, 114, 0.03); /* Fond vert pastel très clair avec transparence */
+    margin: 10px 0; /* Espace autour de l'encadrement */
+  }
+</style>
+<style>
+  .brdblack {
+    border: 2px solid black; /* Définir la couleur et l'épaisseur de la bordure */
+    padding: 10px; /* Ajouter de l'espace autour du texte */
+    background-color: #f9f9f9; /* Optionnel : couleur de fond pour le texte */
+    margin: 10px 0; /* Ajouter de l'espace au-dessus et en-dessous de l'encadrement */
+  }
+</style>
+<div id="package" class="section level2 unnumbered">
+<h2 class="unnumbered">Package</h2>
+<p>Only functions from <code>R</code>-base and stats (preloaded) are
+required plus packages from the <code>tidyverse</code> for data
+representation and manipulation. You could also try the package
+<code>broom</code> that standardizes the output of built-in R functions
+for statistical modelling</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(ggfortify) <span class="co"># extend some ggplot2 features</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(rsample)   <span class="co"># create training/test sets </span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>())</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(Metrics)  <span class="co"># rmse</span></span></code></pre></div>
+</div>
+<div id="preliminary" class="section level1">
+<h1>1. Preliminary</h1>
+<div id="ratweight-dataset" class="section level2">
+<h2>1.1 <code>ratWeight</code> dataset</h2>
+<p>The file <code>ratWeight.csv</code> consists of rat weights measured
+over 14 weeks during a subchronic toxicity study related to the question
+of genetically modified (GM) corn. We will only consider the weight of
+rat <code>B38625</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>rat_weight <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;ratWeight.csv&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">==</span> <span class="st">&#39;B38625&#39;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>rat_weight <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+id
+</th>
+<th style="text-align:right;">
+week
+</th>
+<th style="text-align:right;">
+weight
+</th>
+<th style="text-align:left;">
+regime
+</th>
+<th style="text-align:left;">
+gender
+</th>
+<th style="text-align:left;">
+dosage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+219.8
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+268.0
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+320.9
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+358.6
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+386.4
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+418.8
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+442.5
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+472.5
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+484.0
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+508.4
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+521.7
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+520.5
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+530.5
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B38625
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+530.8
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Male
+</td>
+<td style="text-align:left;">
+33%
+</td>
+</tr>
+</tbody>
+</table>
+Based on this data, our objective is to build a regression model of the
+form <span class="math display">\[y_i = f(x_i) + e_i \quad ; \quad 1
+\leq i \leq n\]</span> where <span class="math inline">\(y\)</span>
+denotes the weight of the rats and <span
+class="math inline">\(x\)</span> the number of week. We will restrict
+ourselves to <strong>polynomial regression</strong>, by considering
+functions of the form <span class="math display">\[
+\begin{aligned}
+f(x) &amp;= f(x ; \beta_0, \beta_1, \beta_2, \ldots, \beta_d) \\
+&amp;= \beta_0 + \beta_1 x + \beta_2 x^2 + \ldots + \beta_d x^d
+\end{aligned}
+\]</span> <br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Polynomial regression
+model]</strong> </span></p>
+<p>The polynomial regression model <span
+class="math display">\[y_i=\beta_0+\beta_1x_i+\beta_2x_i^2+\cdots+\beta_dx_i^d+e_i\]</span>
+can be written in a matrix form <span
+class="math display">\[Y=X\beta+\boldsymbol{e}\]</span> where <span
+class="math inline">\(Y=(y_1,\cdots,y_n)^\top\)</span>, <span
+class="math inline">\(\boldsymbol{e}=(e_1,\cdots,e_n)^\top\)</span> and
+<span class="math display">\[X=\begin{pmatrix}
+1&amp;x_1&amp;x_1^2&amp;\cdots&amp;x_1^d\\
+1&amp;x_2&amp;x_2^2&amp;\cdots&amp;x_2^d\\
+\vdots&amp;\vdots&amp;\ddots&amp; &amp;\vdots\\
+1&amp;x_n&amp;x_n^2&amp;\cdots&amp;x_n^d\\
+\end{pmatrix}\quad\text{and}\quad
+\beta=\begin{pmatrix}
+\beta_0\\
+\beta_1\\
+\vdots\\
+\beta_d\\
+\end{pmatrix}\]</span></p>
+</div>
+<p><br></p>
+</div>
+</div>
+<div id="plot-the-data" class="section level1">
+<h1>1.2. Plot the data</h1>
+<p>Let start by plotting the data:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>rat_plot <span class="ot">&lt;-</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  rat_weight <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> weight) <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">colour=</span><span class="st">&quot;#993399&quot;</span>) <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">&quot;week&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;weight (grams)&quot;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>rat_plot</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/linear-regression-correction-1-1.png" width="672" /></p>
+</div>
+<div id="first-models" class="section level1">
+<h1>2. First models</h1>
+<p>(degree 0, 1, 2, 3, 6, …) to this data using the <code>lm</code>
+function.</p>
+<div id="fitting-a-polynomial-of-degree-0" class="section level2">
+<h2>2.1. Fitting a polynomial of degree 0</h2>
+<p>The polynomial regression of degree 0 is defined by</p>
+<p><span class="math display">\[y_i = \beta_0 + e_i,\quad
+e_i\overset{iid}{\sim}\mathscr{N}(0,\sigma^2)\]</span> <span
+class="solution"><span style="color: blue;"><strong>Ⓡ</strong></span>
+</span> Let declare it</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>lm0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> rat_weight)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">summary</span>(lm0)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = weight ~ 1, data = rat_weight)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -207.59  -61.84   30.11   90.09  103.41 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   427.39      27.46   15.56 8.75e-10 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 102.7 on 13 degrees of freedom</code></pre>
+<p><span style="font-size: 30 px;">📈</span> The coefficient <span
+class="math inline">\(\beta_0\)</span> (ìntercept`) is the empirical
+mean</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">mean</span>(rat_weight<span class="sc">$</span>weight)</span></code></pre></div>
+<pre><code>## [1] 427.3857</code></pre>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let display the
+regression line.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>rat_plot0 <span class="ot">&lt;-</span> rat_plot <span class="sc">+</span> </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="dv">1</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>rat_plot_0 <span class="ot">&lt;-</span> rat_plot <span class="sc">+</span> </span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat_plot0, rat_plot_0, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> Looking how the model fits
+the data is more than enough for concluding that this model is
+miss-specified.</p>
+</div>
+<div id="fitting-a-polynomial-of-degree-1" class="section level2">
+<h2>2.2. Fitting a polynomial of degree 1</h2>
+<p>The polynomial regression of degree 1 is defined by <span
+class="math display">\[y_i = \beta_0 + \beta_1 x_i + e_i,\quad
+e_i\overset{iid}{\sim}\mathscr{N}(0,\sigma^2)\]</span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let declare
+it</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> week, <span class="at">data =</span> rat_weight)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = weight ~ week, data = rat_weight)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -54.67 -22.90  12.76  21.98  33.35 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  250.943     17.348   14.46 5.88e-09 ***
+## week          23.526      2.037   11.55 7.42e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 30.73 on 12 degrees of freedom
+## Multiple R-squared:  0.9174, Adjusted R-squared:  0.9105 
+## F-statistic: 133.3 on 1 and 12 DF,  p-value: 7.418e-08</code></pre>
+<p><span style="font-size: 30 px;">📈</span> The slope <span
+class="math inline">\(\beta_1\)</span> is clearly statistically
+significant while the model explains about <span
+class="math inline">\(92\%\)</span> of the variability of the data.</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let add this
+regression line to the previous one.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>rat_plot1<span class="ot">&lt;-</span>rat_plot <span class="sc">+</span><span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>rat_plot_1 <span class="ot">&lt;-</span> rat_plot_0 <span class="sc">+</span> </span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#339900&quot;</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat_plot1, rat_plot_1, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> Much better!</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display some
+diagnostic plots</p>
+<p>Several diagnostic plots are available for a <code>lm</code> object.
+The first two are a plot of residuals against fitted values and a normal
+QQ plot.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">autoplot</span>(lm1, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) <span class="do">## autoplot comes from ggfortify</span></span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/linear-regression-correction-6-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> The residual plot shows a
+clear (increasing and decreasing) trend which suggests that the
+residuals are not identically distributed around 0. <strong>We reject
+this model!</strong></p>
+</div>
+<div id="fitting-a-polynomial-of-degree-2" class="section level2">
+<h2>2.3. Fitting a polynomial of degree 2</h2>
+<p>The polynomial regression of degree 2 is defined by</p>
+<p><span class="math display">\[y_i = \beta_0 + \beta_1 x_i + \beta_2
+x_i^2 + e_i,\quad e_i\overset{iid}{\sim}\mathscr{N}(0,\sigma^2)\]</span>
+<span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let declare it .
+There is two way to declare it</p>
+<ul>
+<li>`lm(weight ~ week + I(week^2), data=rat_weight)``</li>
+<li>or Equivalently,
+<code>lm(weight ~ poly(week, 2, raw = TRUE), data=rat_weight)</code></li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> week <span class="sc">+</span> <span class="fu">I</span>(week<span class="sc">^</span><span class="dv">2</span>), <span class="at">data=</span>rat_weight)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="do">## lm(weight ~ poly(week, 2, raw = TRUE), data=rat_weight)</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = weight ~ week + I(week^2), data = rat_weight)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.0214 -3.5726  0.2129  2.5242  7.1935 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 172.80824    4.18111   41.33 2.02e-13 ***
+## week         52.82620    1.28236   41.20 2.10e-13 ***
+## I(week^2)    -1.95337    0.08316  -23.49 9.46e-11 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.487 on 11 degrees of freedom
+## Multiple R-squared:  0.9984, Adjusted R-squared:  0.9981 
+## F-statistic:  3402 on 2 and 11 DF,  p-value: 4.4e-16</code></pre>
+<p><span style="font-size: 30 px;">📈</span> the square of the
+<code>week</code> is clearly statistically significant while the model
+explains about <span class="math inline">\(99.8\%\)</span> of the
+variability of the data!</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let add this
+regression line to the previous one.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>rat_plot2<span class="ot">&lt;-</span>rat_plot <span class="sc">+</span> </span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>),<span class="at">colour=</span><span class="st">&quot;#991010&quot;</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>rat_plot_2 <span class="ot">&lt;-</span> rat_plot_1 <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#991010&quot;</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat_plot2, rat_plot_2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> Much much bette, what about
+the diagnotic plots</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">autoplot</span>(lm2, <span class="at">which=</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> Much better!!</p>
+</div>
+</div>
+<div id="predictive-performance" class="section level1">
+<h1>3. Predictive performance</h1>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let us first
+randomly define the training and test samples, with R package
+<code>rsample</code>.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>train_size <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fl">0.8</span> <span class="sc">*</span> <span class="fu">nrow</span>(rat_weight))</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>rat_training <span class="ot">&lt;-</span> rat_weight[<span class="dv">1</span><span class="sc">:</span>train_size, ]</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>rat_test <span class="ot">&lt;-</span> rat_weight[(train_size <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span><span class="fu">nrow</span>(rat_weight), ]</span></code></pre></div>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Construct our
+model on the <em>train</em> and predict on the <em>test</em></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>pred_testing_set  <span class="ot">&lt;-</span> </span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> rat_training) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">predict</span>(rat_test)</span></code></pre></div>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Then display
+plots to visualize.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>rat_point_train_test <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span>  </span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> weight) <span class="sc">+</span> </span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rat_training, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;Train&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Train&quot;</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rat_test, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;Test&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Test&quot;</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;week&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;weight (grams)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Train&quot;</span> <span class="ot">=</span> <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;Test&quot;</span> <span class="ot">=</span> <span class="st">&quot;#193399&quot;</span>, <span class="st">&quot;Prediction&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Train&quot;</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">&quot;Test&quot;</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">&quot;Prediction&quot;</span> <span class="ot">=</span> <span class="dv">4</span>)) <span class="sc">+</span>  </span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Type&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Type&quot;</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a>rat_mod_train <span class="ot">&lt;-</span> rat_point_train_test <span class="sc">+</span> </span>
+<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">data =</span> rat_training, <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">2</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a>rat_point_pred <span class="ot">&lt;-</span> rat_point_train_test <span class="sc">+</span>  </span>
+<span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(rat_test, <span class="at">testing =</span> pred_testing_set), </span>
+<span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> testing, <span class="at">color =</span> <span class="st">&quot;Prediction&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Prediction&quot;</span>), </span>
+<span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a></span>
+<span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a>rat_mod_pred <span class="ot">&lt;-</span> rat_mod_train <span class="sc">+</span>  </span>
+<span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(rat_test, <span class="at">testing =</span> pred_testing_set), </span>
+<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> testing, <span class="at">color =</span> <span class="st">&quot;Prediction&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Prediction&quot;</span>), </span>
+<span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a></span>
+<span id="cb19-31"><a href="#cb19-31" tabindex="-1"></a></span>
+<span id="cb19-32"><a href="#cb19-32" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat_point_train_test, rat_mod_train, rat_point_pred, rat_mod_pred, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> It seems we have good
+predictive performance of the model. But what about the
+prediction/confidence intervals after 11 weeks?</p>
+<br>
+<div class="brdblack">
+<p><span style="color: blue;"><u><strong>Confidence interval and
+prediction intervals</strong></u></span></p>
+<p><span class="attention">⚠️</span> Note that</p>
+<ul>
+<li><strong>Confidence interval</strong> is a interval for <span
+class="math inline">\(f(x)\)</span></li>
+<li><strong>Prediction interval</strong> is a interval for <span
+class="math inline">\(y = f (x) + e\)</span>.</li>
+</ul>
+<p>The second one is larger than the first one! This prediction interval
+takes into account both the uncertainty on the predicted distance <span
+class="math inline">\(f(x)\)</span> and the variability of the measure,
+represented in the model by the residual error <span
+class="math inline">\(e\)</span></p>
+</div>
+<p><br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Consider the
+second order polynomial model and compute a <strong>prediction
+interval</strong> and a <strong>confidence interval</strong> of size
+<span class="math inline">\(95\%\)</span> and plot them.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>new_x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">week =</span> (<span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>conf_inter <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm2, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>pred_inter <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm2, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>rat_point_pred  <span class="sc">+</span><span class="fu">geom_ribbon</span>(<span class="at">data =</span> conf_inter, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;red&quot;</span> , <span class="at">alpha =</span> <span class="fl">0.35</span>) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> pred_inter, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><span class="solution">📝</span> In <strong>R</strong>, the
+<code>setNames()</code> function assigns names to the columns or
+elements of an object. <span class="solution">📝</span> In
+<code>ggplot2</code>, the <code>geom_ribbon()</code> function is used to
+create shaded areas between two y-values (e.g., confidence intervals)
+across a range of x-values. (<code>alpha</code> value for
+transparency)</p>
+<p><span style="font-size: 30 px;">📈</span> We observe a decreasing
+predicted weight after week 13, which seems quite strange… Can we do
+better?</p>
+</div>
+<div id="fitting-an-orthogonal-polynomial-model-use-default-rawfalse"
+class="section level1">
+<h1>4. Fitting an orthogonal polynomial model (use default:
+raw=FALSE)</h1>
+<p>Let <span
+class="math inline">\(\boldsymbol{x}=(x_{1},\cdots,x_{n})^\top\in\mathbb{R}^n\)</span>.
+The columns of <span
+class="math inline">\(X=[\mathbf{1}_n,\boldsymbol{x},\boldsymbol{x}^2,
+\ldots,\boldsymbol{x}^d]\)</span> are highly correlated. The Gram matrix
+is such <span class="math display">\[
+G=\frac{1}{n}[X^\top X]_{k\ell}=\frac{1}{n}\sum_{i=1}^nx_i^{k+\ell-2}
+\]</span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let declare annon
+orthogonal polynomial model of order 2 and display</p>
+<ul>
+<li><span class="math inline">\((X^\top X)^{-1}\)</span> of size <span
+class="math inline">\(p\times p\)</span> with <span
+class="math inline">\(p=3\)</span>. Note that <code>crossprod(A)</code>
+computes the cross-product of the matrix <code>A</code>, <em>which is
+equivalent to </em>i.e* <span class="math inline">\(A^\top
+A\)</span>.</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>n<span class="ot">&lt;-</span><span class="fu">length</span>(rat_weight<span class="sc">$</span>weight)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>lm2  <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">raw=</span><span class="cn">TRUE</span>), <span class="at">data =</span> rat_weight)</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(lm2)</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="fu">crossprod</span>(X)<span class="sc">%&gt;%</span>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+(Intercept)
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = TRUE)1
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = TRUE)2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+105
+</td>
+<td style="text-align:right;">
+1015
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = TRUE)1
+</td>
+<td style="text-align:right;">
+105
+</td>
+<td style="text-align:right;">
+1015
+</td>
+<td style="text-align:right;">
+11025
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = TRUE)2
+</td>
+<td style="text-align:right;">
+1015
+</td>
+<td style="text-align:right;">
+11025
+</td>
+<td style="text-align:right;">
+127687
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>the Gram matrix <span class="math inline">\(G\)</span> of size <span
+class="math inline">\(p\times p\)</span> with <span
+class="math inline">\(p=3\)</span> by dividing by <span
+class="math inline">\(\sqrt n\)</span></li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>G<span class="ot">&lt;-</span><span class="fu">crossprod</span>(X<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>G<span class="sc">%&gt;%</span>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+(Intercept)
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = TRUE)1
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = TRUE)2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+1.0
+</td>
+<td style="text-align:right;">
+7.5
+</td>
+<td style="text-align:right;">
+72.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = TRUE)1
+</td>
+<td style="text-align:right;">
+7.5
+</td>
+<td style="text-align:right;">
+72.5
+</td>
+<td style="text-align:right;">
+787.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = TRUE)2
+</td>
+<td style="text-align:right;">
+72.5
+</td>
+<td style="text-align:right;">
+787.5
+</td>
+<td style="text-align:right;">
+9120.5
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Display the <strong>correlation matrix</strong> of size <span
+class="math inline">\(p\times p\)</span> with <span
+class="math inline">\(p=3\)</span></li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">cov2cor</span>(<span class="fu">solve</span>(G))<span class="sc">%&gt;%</span>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+(Intercept)
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = TRUE)1
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = TRUE)2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+-0.8976660
+</td>
+<td style="text-align:right;">
+0.7955573
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = TRUE)1
+</td>
+<td style="text-align:right;">
+-0.8976660
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+<td style="text-align:right;">
+-0.9727144
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = TRUE)2
+</td>
+<td style="text-align:right;">
+0.7955573
+</td>
+<td style="text-align:right;">
+-0.9727144
+</td>
+<td style="text-align:right;">
+1.0000000
+</td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 30 px;">📈</span> Here,
+<code>cov2cor(solve(crossprod(X)))</code> performs a series of matrix
+operations that can be explained step by step:</p>
+<ul>
+<li><code>solve(G)</code> function computes the inverse of a matrix:
+<span class="math inline">\(G^{-1}\)</span>.</li>
+<li><code>cov2cor()</code> transforms this covariance matrix into a
+<strong>correlation matrix</strong>, where each off-diagonal element
+represents the correlation between pairs of variables.</li>
+</ul>
+<div id="the-gram-schmidt-procedure" class="section level2">
+<h2>4.1. The Gram-Schmidt procedure</h2>
+<p>Let us explore how to use a sequence of orthogonal polynomials to
+obtain uncorrelated estimates. Let <span
+class="math inline">\(\boldsymbol{x}=(x_{1},\cdots,x_{n})^\top\in\mathbb{R}^n\)</span>.
+The columns of <span
+class="math inline">\(X=[\mathbb{1}_n,\boldsymbol{x},\boldsymbol{x}^2,
+\ldots,\boldsymbol{x}^d]\)</span> are highly correlated, as can be seen
+from the relationship: <span class="math display">\[
+[X^\top X]_{k\ell}=\sum_{i=1}^nx_i^{k+\ell-2}
+\]</span></p>
+<p>By employing orthogonal polynomials, we aim to reduce this
+multicollinearity and achieve more stable estimates. Orthogonal
+polynomials can be obtained by applying the following
+<strong>Gram-Schmidt orthogonalization process</strong> to the basis
+<span
+class="math inline">\(\{\mathbb{1}_n,\boldsymbol{x},\boldsymbol{x}^2,
+\ldots,\boldsymbol{x}^d\}\)</span></p>
+<p><span class="math display">\[\begin{align*}
+p_0(\boldsymbol{x})&amp;=1\\
+p_1(\boldsymbol{x})&amp;=\boldsymbol{x}-\frac{\langle
+\boldsymbol{x},p_0\rangle}{\langle p_0,p_0\rangle}p_0(\boldsymbol{x})\\
+p_2(\boldsymbol{x})&amp;=\boldsymbol{x}^2-\frac{\langle
+\boldsymbol{x}^2,p_1\rangle}{\langle
+p_1,p_1\rangle}p_1(\boldsymbol{x})-\frac{\langle
+\boldsymbol{x}^2,p_0\rangle}{\langle
+p_0,p_0\rangle}p_0(\boldsymbol{x})\\
+&amp;\vdots\\
+p_d(\boldsymbol{x})&amp;=\boldsymbol{x}^d-\frac{\langle
+\boldsymbol{x}^d,p_{d-1}\rangle}{\langle
+p_{d-1},p_{d-1}\rangle}p_{d-1}(\boldsymbol{x})-\cdots-\frac{\langle
+\boldsymbol{x}^d,p_0\rangle}{\langle p_0,p_0\rangle}p_0(\boldsymbol{x})
+\end{align*}\]</span></p>
+<p>Then <span class="math inline">\(\widetilde
+X=[p_0(x),p1(x),\cdots,p_d(x)]\)</span> is the new design matrix such
+that <span class="math display">\[(\widetilde X^\top \widetilde
+X)^{-1}=\begin{pmatrix}
+n&amp;0&amp;0&amp;\cdots&amp;0\\
+0&amp;1&amp;0&amp;\cdots&amp;0\\
+\vdots&amp;\vdots&amp;\ddots&amp; &amp;\vdots\\
+0&amp;0&amp;0&amp;\cdots&amp;1\\
+\end{pmatrix}\in\mathbb{R}^{p\times p}
+\]</span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> <strong>First
+compute a non orthogonal polynomial model.</strong> of order 2. The
+option <code>raw = FALSE</code> (which is the default) allows to use an
+orthogonal basis of polynomial. Let display</p>
+<ul>
+<li><span class="math inline">\((X^\top X)^{-1}\)</span> of size <span
+class="math inline">\(p\times p\)</span> with <span
+class="math inline">\(p=3\)</span>. Note that <code>crossprod(A)</code>
+computes the cross-product of the matrix <code>A</code>, <em>which is
+equivalent to </em>i.e* <span class="math inline">\(A^\top
+A\)</span>.</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>lm2_ortho  <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>, <span class="at">raw=</span><span class="cn">FALSE</span>), <span class="at">data =</span> rat_weight)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>tilde_X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(lm2_ortho)</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a><span class="fu">crossprod</span>(tilde_X)<span class="sc">%&gt;%</span>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+(Intercept)
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = FALSE)1
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = FALSE)2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = FALSE)1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = FALSE)2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Display the <strong>correlation matrix</strong> of size <span
+class="math inline">\(p\times p\)</span> with <span
+class="math inline">\(p=3\)</span></li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>tilde_G<span class="ot">&lt;-</span><span class="fu">crossprod</span>(tilde_X<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a><span class="co">#tilde_G%&gt;%  kableExtra::kbl() %&gt;% kableExtra::kable_styling()</span></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a><span class="fu">cov2cor</span>(<span class="fu">solve</span>(tilde_G))<span class="sc">%&gt;%</span>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+(Intercept)
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = FALSE)1
+</th>
+<th style="text-align:right;">
+poly(week, degree = 2, raw = FALSE)2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = FALSE)1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+poly(week, degree = 2, raw = FALSE)2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="the-coefficents" class="section level2">
+<h2>4.2 The coefficents</h2>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compare ortho and
+non ortho polynomial regression of order 2</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>Coeff_compare<span class="ot">&lt;-</span><span class="fu">rbind.data.frame</span>(<span class="fu">mean</span>(rat_weight<span class="sc">$</span>weight),lm2<span class="sc">$</span>coefficients[<span class="dv">1</span>],lm2_ortho<span class="sc">$</span>coefficients[<span class="dv">1</span>])</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">names</span>(Coeff_compare)<span class="ot">&lt;-</span><span class="st">&quot;Intercept&quot;</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="fu">row.names</span>(Coeff_compare)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;mean&quot;</span>,<span class="st">&quot;lm2&quot;</span>,<span class="st">&quot;lm2_ortho&quot;</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>Coeff_compare</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Intercept"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"427.3857","_rn_":"mean"},{"1":"172.8082","_rn_":"lm2"},{"1":"427.3857","_rn_":"lm2_ortho"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> When we consider the
+orthogonal polynomial model, the estimated intercept is the empirical
+mean <span class="math inline">\(\bar{y}\)</span>=427.3857143</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compare ortho.
+polynomial regression for different order</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>coef_lm3_ortho<span class="ot">&lt;-</span><span class="fu">coef</span>(<span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">3</span>), <span class="at">data =</span> rat_weight))</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>Coeff_compare_ortho<span class="ot">&lt;-</span><span class="fu">rbind.data.frame</span>(coef_lm3_ortho)</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>coef_lm2_ortho<span class="ot">&lt;-</span><span class="fu">coef</span>(<span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> rat_weight))</span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>l2<span class="ot">&lt;-</span><span class="fu">c</span>(coef_lm2_ortho[<span class="dv">1</span>],coef_lm2_ortho[<span class="dv">2</span>],coef_lm2_ortho[<span class="dv">3</span>],<span class="st">&quot;&quot;</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>coef_lm1_ortho<span class="ot">&lt;-</span><span class="fu">coef</span>(<span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">1</span>), <span class="at">data =</span> rat_weight))</span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>l1<span class="ot">&lt;-</span><span class="fu">c</span>(coef_lm1_ortho[<span class="dv">1</span>],coef_lm1_ortho[<span class="dv">2</span>],<span class="st">&quot;&quot;</span>,<span class="st">&quot;&quot;</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" tabindex="-1"></a>Coeff_compare_ortho<span class="ot">&lt;-</span><span class="fu">rbind</span>(l1,l2,Coeff_compare_ortho)</span>
+<span id="cb27-14"><a href="#cb27-14" tabindex="-1"></a><span class="fu">names</span>(Coeff_compare_ortho)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>,<span class="st">&quot;week&quot;</span>,<span class="st">&quot;week^2&quot;</span>,<span class="st">&quot;week^3&quot;</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" tabindex="-1"></a><span class="fu">row.names</span>(Coeff_compare_ortho)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;coef_lm1_ortho&quot;</span>,<span class="st">&quot;coef_lm2_ortho&quot;</span>,<span class="st">&quot;coef_lm3_ortho&quot;</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" tabindex="-1"></a>Coeff_compare_ortho<span class="sc">%&gt;%</span>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["intercept"],"name":[1],"type":["chr"],"align":["left"]},{"label":["week"],"name":[2],"type":["chr"],"align":["left"]},{"label":["week^2"],"name":[3],"type":["chr"],"align":["left"]},{"label":["week^3"],"name":[4],"type":["chr"],"align":["left"]}],"data":[{"1":"427.385714285714","2":"354.840774754778","3":"","4":"","_rn_":"coef_lm1_ortho"},{"1":"427.385714285714","2":"354.840774754778","3":"-105.409359075792","4":"","_rn_":"coef_lm2_ortho"},{"1":"427.385714285714","2":"354.840774754778","3":"-105.409359075792","4":"4.88947156955965","_rn_":"coef_lm3_ortho"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> Since the regressors are
+uncorrelated, the estimated values don’t change when increasing the
+order of the polynomial</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display the
+<code>summary</code>of the model <code>lm2_ortho</code></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">summary</span>(lm2_ortho)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = weight ~ poly(week, degree = 2, raw = FALSE), data = rat_weight)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.0214 -3.5726  0.2129  2.5242  7.1935 
+## 
+## Coefficients:
+##                                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                           427.386      1.199  356.36  &lt; 2e-16 ***
+## poly(week, degree = 2, raw = FALSE)1  354.841      4.487   79.07  &lt; 2e-16 ***
+## poly(week, degree = 2, raw = FALSE)2 -105.409      4.487  -23.49 9.46e-11 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.487 on 11 degrees of freedom
+## Multiple R-squared:  0.9984, Adjusted R-squared:  0.9981 
+## F-statistic:  3402 on 2 and 11 DF,  p-value: 4.4e-16</code></pre>
+<p><span style="font-size: 30 px;">📈</span> The p-values of the t-test
+can now properly be interpreted and confirm our previous analyis: the
+coefficients are statistically significant. estimated variance of the
+residuals <span class="math inline">\(\widehat{\sigma^2}\)</span>, the
+R-squared value and the adjusted R-squared value are identical when
+orthogonal or non orthogonal polynomial are used. Indeed, even if the
+parameterization is different, the two models are the same polynomials
+of degree 2 and therefore lead to the same predictions.</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Furthermore,
+confidence intervals can be derived for each coefficient</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">cbind</span>(coef_lm2_ortho,<span class="fu">confint</span>(lm2_ortho))<span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()<span class="sc">%&gt;%</span>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["coef_lm2_ortho"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["2.5 %"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["97.5 %"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"427.3857","2":"424.7460","3":"430.02540","_rn_":"(Intercept)"},{"1":"354.8408","2":"344.9640","3":"364.71757","_rn_":"poly(week, degree = 2)1"},{"1":"-105.4094","2":"-115.2862","3":"-95.53256","_rn_":"poly(week, degree = 2)2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="an-example-of-overfitting" class="section level2">
+<h2>4.3. An example of overfitting!</h2>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Fitting a n
+orthongonal polynomial of degree 6 and comment the outputs. of the
+summary, the diagnostic plots</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>lm6_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">6</span>), <span class="at">data =</span> rat_weight)</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">summary</span>(lm6_ortho)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = weight ~ poly(week, degree = 6), data = rat_weight)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.9438 -2.6602  0.6886  2.3738  4.9742 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              427.386      1.152 371.075 2.73e-16 ***
+## poly(week, degree = 6)1  354.841      4.309  82.340 1.03e-11 ***
+## poly(week, degree = 6)2 -105.409      4.309 -24.460 4.86e-08 ***
+## poly(week, degree = 6)3    4.889      4.309   1.135    0.294    
+## poly(week, degree = 6)4   -5.792      4.309  -1.344    0.221    
+## poly(week, degree = 6)5    3.747      4.309   0.870    0.413    
+## poly(week, degree = 6)6    4.473      4.309   1.038    0.334    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.309 on 7 degrees of freedom
+## Multiple R-squared:  0.9991, Adjusted R-squared:  0.9982 
+## F-statistic:  1231 on 6 and 7 DF,  p-value: 3.232e-10</code></pre>
+<p><span style="font-size: 30 px;">📈</span> The <span
+class="math inline">\(R^2\)</span> is veray high, but the t-test for the
+coefficient higher than 2 are not significant.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>rat_weight <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> weight) <span class="sc">+</span> </span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">colour=</span><span class="st">&quot;#993399&quot;</span>) <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">&quot;week&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;weight (grams)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">6</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#339900&quot;</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> It fit
+<em>“perfectly”</em>!</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">autoplot</span>(lm6_ortho, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> The postulat
+<em>[P1-P2]</em> are validated, not <em>[P4]</em>. what about
+confiddence and/prection intervals..</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>conf_inter_lm6_ortho <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm6_ortho, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>pred_inter_lm6_ortho <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm6_ortho, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a>CI_lm6_ortho<span class="ot">&lt;-</span> rat_point_pred  <span class="sc">+</span><span class="fu">geom_ribbon</span>(<span class="at">data =</span> conf_inter_lm6_ortho, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;red&quot;</span> , <span class="at">alpha =</span> <span class="fl">0.35</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> pred_inter_lm6_ortho, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">&quot;Interval for lm6_ortho&quot;</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a>conf_inter_lm2_ortho <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm2_ortho, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a>pred_inter_lm2_ortho <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm2_ortho, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>CI_lm2_ortho<span class="ot">&lt;-</span> rat_point_pred  <span class="sc">+</span><span class="fu">geom_ribbon</span>(<span class="at">data =</span> conf_inter_lm2_ortho, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;red&quot;</span> , <span class="at">alpha =</span> <span class="fl">0.35</span>) <span class="sc">+</span></span>
+<span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> pred_inter_lm2_ortho, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">&quot;Interval for lm2_ortho&quot;</span>)</span>
+<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="#cb35-17" tabindex="-1"></a><span class="fu">grid.arrange</span>(CI_lm2_ortho, CI_lm6_ortho, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> However, the model
+<code>lm6_ortho</code> clearly overfits.</p>
+</div>
+</div>
+<div id="model-comparison" class="section level1">
+<h1>5 Model comparison</h1>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compare the
+following orthogonal polynomials:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>lm0_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>rat_weight)</span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>lm1_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">1</span>), <span class="at">data =</span> rat_weight)</span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>lm2_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> rat_weight)</span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>lm3_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">3</span>), <span class="at">data =</span> rat_weight)</span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>lm4_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">4</span>), <span class="at">data =</span> rat_weight)</span></code></pre></div>
+<p>And use statistical tests and information criteria to compare the
+models and select <em>“the best one”</em>.</p>
+<div id="t-test" class="section level2">
+<h2>5.1. t-test</h2>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> First, perform
+<span class="math inline">\(t\)</span>-test for each coefficient of the
+model <span class="math display">\[H0 : \ \beta_j=0 \ \ vs \ \ H1 : \
+\beta_j\neq 0\]</span></p>
+<p>As we use orthogonal model just display for
+<code>lm4_ortho</code></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">tidy</span>(lm4_ortho )</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"427.385714","3":"1.141056","4":"374.552892","5":"3.508637e-20"},{"1":"poly(week, degree = 4)1","2":"354.840775","3":"4.269440","4":"83.111793","5":"2.676662e-14"},{"1":"poly(week, degree = 4)2","2":"-105.409359","3":"4.269440","4":"-24.689273","5":"1.406868e-09"},{"1":"poly(week, degree = 4)3","2":"4.889472","3":"4.269440","4":"1.145226","5":"2.816554e-01"},{"1":"poly(week, degree = 4)4","2":"-5.792131","3":"4.269440","4":"-1.356649","5":"2.079425e-01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> Based on these results, we
+can conclude that <span class="math inline">\(\beta_0 \neq  0\)</span>,
+<span class="math inline">\(\beta_1 \neq  0\)</span> and <span
+class="math inline">\(\beta_2 \neq  0\)</span>. But tests are not
+significative for <span class="math inline">\(\beta_3\)</span> and <span
+class="math inline">\(\beta_4\)</span>. Note that, we also can read it
+in the summary of the model.</p>
+</div>
+<div id="analysis-of-variance-anova" class="section level2">
+<h2>5.2. Analysis-of-variance (anova)</h2>
+<p>By construction, the F-statistics provided with the summary of a
+fitted model is the F-statistics of an anova for testing this fitted
+model against the model without explanatory variable <code>lm0</code>.
+This test is known as the overall F-test for regression.</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compare nested
+models</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>pv<span class="ot">&lt;-</span><span class="fu">cbind.data.frame</span>(<span class="fu">anova</span>(lm0_ortho , lm1_ortho )<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>],<span class="fu">anova</span>(lm0_ortho , lm2_ortho )<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>],<span class="fu">anova</span>(lm1_ortho ,lm2_ortho )<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>],<span class="fu">anova</span>(lm2_ortho ,lm3_ortho )<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>],<span class="fu">anova</span>(lm2_ortho , lm4_ortho )<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">2</span>] )</span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a><span class="fu">names</span>(pv)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;lm0-lm1&quot;</span>,<span class="st">&quot;lm0-lm2&quot;</span>,<span class="st">&quot;lm1-lm2&quot;</span>,<span class="st">&quot;lm2-lm3&quot;</span>,<span class="st">&quot;lm2-lm4&quot;</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a><span class="fu">row.names</span>(pv)<span class="ot">&lt;-</span><span class="st">&quot;p-value&quot;</span></span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>pv<span class="sc">%&gt;%</span>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["lm0-lm1"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["lm0-lm2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lm1-lm2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["lm2-lm3"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["lm2-lm4"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"7.417993e-08","2":"4.399724e-16","3":"9.458837e-11","4":"0.2971344","5":"0.2589228","_rn_":"p-value"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> Not surprisingly, both
+<code>lm1</code> and <code>lm2</code> are clearly preferred to
+<code>lm0</code>. As already stated above the <span
+class="math inline">\(t\)</span>-test and the <span
+class="math inline">\(F-test\)</span> for testing <code>lm0</code>
+against <code>lm1</code> are equivalent.</p>
+</div>
+<div id="information-criteria-aicbic" class="section level2">
+<h2>5.3. Information criteria (AIC,BIC)</h2>
+<p>Information criteria such as the Akaike information criteria (AIC)
+and the Bayesian information criteria (BIC) can also be used for
+comparing models which are not necessarily nested.</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compute them
+numerically and graphically</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">AIC</span>(lm0_ortho,lm1_ortho,lm2_ortho,lm3_ortho,lm4_ortho),<span class="fu">BIC</span>(lm0_ortho,lm1_ortho,lm2_ortho,lm3_ortho,lm4_ortho))<span class="sc">%&gt;%</span>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>() <span class="sc">%&gt;%</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>()</span></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:right;">
+BIC
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+lm0_ortho
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+172.39676
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+173.67487
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lm1_ortho
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+139.47967
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+141.39684
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lm2_ortho
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+86.38994
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+88.94617
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lm3_ortho
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+86.79103
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+89.98632
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lm4_ortho
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+86.18613
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+90.02048
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a>plot_BIC <span class="ot">&lt;-</span> <span class="fu">qplot</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">BIC</span>(lm0_ortho, lm1_ortho, lm2_ortho, lm3_ortho, lm4_ortho)<span class="sc">$</span>BIC, </span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a>              <span class="at">geom =</span> <span class="st">&quot;line&quot;</span>, </span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a>              <span class="at">xlab =</span> <span class="st">&quot;Polynomial order&quot;</span>, </span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a>              <span class="at">ylab =</span> <span class="st">&quot;BIC&quot;</span>) <span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">&quot;BIC vs Polynomial Order&quot;</span>)  <span class="co"># Ajout d&#39;un titre</span></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a>plot_AIC <span class="ot">&lt;-</span> <span class="fu">qplot</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>, <span class="fu">AIC</span>(lm0_ortho, lm1_ortho, lm2_ortho, lm3_ortho, lm4_ortho)<span class="sc">$</span>AIC, </span>
+<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a>              <span class="at">geom =</span> <span class="st">&quot;line&quot;</span>, </span>
+<span id="cb40-13"><a href="#cb40-13" tabindex="-1"></a>              <span class="at">xlab =</span> <span class="st">&quot;Polynomial order&quot;</span>, </span>
+<span id="cb40-14"><a href="#cb40-14" tabindex="-1"></a>              <span class="at">ylab =</span> <span class="st">&quot;AIC&quot;</span>) <span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">&quot;AIC vs Polynomial Order&quot;</span>)  <span class="co"># Ajout d&#39;un titre</span></span>
+<span id="cb40-16"><a href="#cb40-16" tabindex="-1"></a></span>
+<span id="cb40-17"><a href="#cb40-17" tabindex="-1"></a><span class="co"># Afficher les deux graphiques côte à côte</span></span>
+<span id="cb40-18"><a href="#cb40-18" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_BIC,plot_AIC, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> Not surprisingly,
+<code>lm2</code> is clearly preferred.</p>
+</div>
+<div id="rmse" class="section level2">
+<h2>5.6. RMSE</h2>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compute the
+following orthogonal polynomials on the <em>training</em> set and
+compare them on the <em>tst</em></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a>lm0_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data=</span>rat_training)</span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>lm1_ortho  <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">1</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>lm2_ortho  <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>lm3_ortho  <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">3</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>lm4_ortho  <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">4</span>), <span class="at">data =</span>rat_training)</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="#cb41-11" tabindex="-1"></a>RMSE0<span class="ot">=</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm0_ortho , <span class="at">newdata =</span> rat_test))</span>
+<span id="cb41-12"><a href="#cb41-12" tabindex="-1"></a>RMSE1<span class="ot">=</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm1_ortho , <span class="at">newdata =</span> rat_test))</span>
+<span id="cb41-13"><a href="#cb41-13" tabindex="-1"></a>RMSE2<span class="ot">=</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm2_ortho , <span class="at">newdata =</span> rat_test))</span>
+<span id="cb41-14"><a href="#cb41-14" tabindex="-1"></a>RMSE3<span class="ot">=</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm3_ortho , <span class="at">newdata =</span> rat_test))</span>
+<span id="cb41-15"><a href="#cb41-15" tabindex="-1"></a>RMSE4<span class="ot">=</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm4_ortho , <span class="at">newdata =</span> rat_test))</span>
+<span id="cb41-16"><a href="#cb41-16" tabindex="-1"></a></span>
+<span id="cb41-17"><a href="#cb41-17" tabindex="-1"></a></span>
+<span id="cb41-18"><a href="#cb41-18" tabindex="-1"></a>RMSE<span class="ot">&lt;-</span><span class="fu">cbind.data.frame</span>(RMSE0,RMSE1,RMSE2,RMSE3,RMSE4)</span>
+<span id="cb41-19"><a href="#cb41-19" tabindex="-1"></a>RMSE<span class="sc">%&gt;%</span>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["RMSE0"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RMSE1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["RMSE2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["RMSE3"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["RMSE4"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"127.2113","2":"81.81824","3":"3.721599","4":"32.58048","5":"13.47195"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> Not surprisingly,
+<code>lm2</code> is clearly better. <strong>But can we improve
+it?</strong></p>
+</div>
+</div>
+<div id="data-transformation" class="section level1">
+<h1>6. Data transformation</h1>
+<p>When fitting a linear regression model one assumes that there is a
+linear relationship between the response variable and each of the
+explanatory variables. However, in many situations there may instead be
+a non-linear relationship between the variables. This can sometimes be
+remedied by applying a suitable transformation to some (or all) of the
+variables, such as power transformations or logarithms.</p>
+<p>In addition, transformations can be used to correct violations of
+model assumptions such as constant error variance and normality.</p>
+<p>Applying suitable transformations to the original data prior to
+performing regression may be sufficient to make linear regression models
+appropriate for the transformed data.</p>
+<div id="log-based-tranformations" class="section level2">
+<h2>6.1. Log based tranformations</h2>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Let’s plot the
+data using semi-log scales: we use a logarithmic scale for the x-axis
+and a linear scale for the y-axis in the first plot, a linear scale for
+the x-axis and a logarithmic scale for the y-axis in the second plot.
+Then, in the second plot, let us try with a log-log transformation</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>rat0_plot <span class="ot">&lt;-</span></span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>  rat_weight <span class="sc">%&gt;%</span> </span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> weight) <span class="sc">+</span> </span>
+<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">colour=</span><span class="st">&quot;#993399&quot;</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">se =</span> <span class="cn">FALSE</span>)<span class="sc">+</span> </span>
+<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#339900&quot;</span>)<span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;No scale&quot;</span>)</span>
+<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a></span>
+<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> rat0_plot <span class="sc">+</span> <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;scale_x&quot;</span>)<span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">&quot;log(week)&quot;</span>) </span>
+<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="#cb42-10" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> rat0_plot <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;scale_y&quot;</span>)<span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;log(weight)&quot;</span>)</span>
+<span id="cb42-11"><a href="#cb42-11" tabindex="-1"></a></span>
+<span id="cb42-12"><a href="#cb42-12" tabindex="-1"></a>plot3 <span class="ot">&lt;-</span> rat0_plot <span class="sc">+</span> <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">scale_y_log10</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;scale_x_y&quot;</span>)<span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">&quot;log(week)&quot;</span>)  <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;log(weight)&quot;</span>)</span>
+<span id="cb42-13"><a href="#cb42-13" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat0_plot,plot1, plot2, plot3, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> The second one Looks much
+better! Fit it, i.e., the following model to the data: <span
+class="math display">\[y_i=c_0+c_1\log(x_i)+e_i\]</span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Fit the model and
+study the diagnotic plots</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>lm1_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight<span class="sc">~</span> <span class="fu">log</span>(week), <span class="at">data =</span> rat_weight)</span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a><span class="fu">summary</span>(lm1_log)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = weight ~ log(week), data = rat_weight)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -15.9964 -12.2774  -0.8882   7.2671  29.1540 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  190.646      9.864   19.33 2.08e-10 ***
+## log(week)    131.568      5.064   25.98 6.45e-12 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 14.13 on 12 degrees of freedom
+## Multiple R-squared:  0.9825, Adjusted R-squared:  0.9811 
+## F-statistic:   675 on 1 and 12 DF,  p-value: 6.454e-12</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>rat_plot_log <span class="ot">&lt;-</span></span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>  rat_weight <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(week), <span class="at">y =</span> weight) <span class="sc">+</span> </span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">colour=</span><span class="st">&quot;#993399&quot;</span>) <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">&quot;log(week)&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;weight (grams)&quot;</span>)<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> x)</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>rat_plot_log</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">autoplot</span>(lm1_log, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> We observe a tendance,
+structure in the <em>Residuals vs Fitted</em> plot. We may study a
+polynomial model in <code>log(week)</code> (section 6.4).</p>
+</div>
+<div id="predictive-performance-1" class="section level2">
+<h2>6.2. Predictive performance</h2>
+</div>
+<div id="log-x" class="section level2">
+<h2>log X</h2>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>pred_testing_set_log <span class="ot">&lt;-</span> <span class="fu">lm</span>((weight) <span class="sc">~</span><span class="fu">log</span>(week) ,<span class="at">data =</span> rat_training) <span class="sc">%&gt;%</span>  <span class="fu">predict</span>(rat_test)</span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>rat_point_train_test_log <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span>  </span>
+<span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(week), <span class="at">y =</span> (weight)) <span class="sc">+</span> </span>
+<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rat_training, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;Train&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Train&quot;</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb47-7"><a href="#cb47-7" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> rat_test, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;Test&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Test&quot;</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb47-8"><a href="#cb47-8" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;log(week)&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb47-9"><a href="#cb47-9" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;(weight) (grams)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb47-10"><a href="#cb47-10" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Train&quot;</span> <span class="ot">=</span> <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;Test&quot;</span> <span class="ot">=</span> <span class="st">&quot;#193399&quot;</span>, <span class="st">&quot;Prediction&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb47-11"><a href="#cb47-11" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Train&quot;</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">&quot;Test&quot;</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">&quot;Prediction&quot;</span> <span class="ot">=</span> <span class="dv">4</span>)) <span class="sc">+</span>  </span>
+<span id="cb47-12"><a href="#cb47-12" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">&quot;Type&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Type&quot;</span>) <span class="sc">+</span>  </span>
+<span id="cb47-13"><a href="#cb47-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">data.frame</span>(rat_test, <span class="at">testing =</span> pred_testing_set_log ), </span>
+<span id="cb47-14"><a href="#cb47-14" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(week), <span class="at">y =</span> testing, <span class="at">color =</span> <span class="st">&quot;Prediction&quot;</span>, <span class="at">shape =</span> <span class="st">&quot;Prediction&quot;</span>), </span>
+<span id="cb47-15"><a href="#cb47-15" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb47-16"><a href="#cb47-16" tabindex="-1"></a></span>
+<span id="cb47-17"><a href="#cb47-17" tabindex="-1"></a></span>
+<span id="cb47-18"><a href="#cb47-18" tabindex="-1"></a></span>
+<span id="cb47-19"><a href="#cb47-19" tabindex="-1"></a></span>
+<span id="cb47-20"><a href="#cb47-20" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb47-21"><a href="#cb47-21" tabindex="-1"></a>new_x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">week =</span> (<span class="dv">0</span><span class="sc">:</span><span class="dv">20</span>))</span>
+<span id="cb47-22"><a href="#cb47-22" tabindex="-1"></a></span>
+<span id="cb47-23"><a href="#cb47-23" tabindex="-1"></a></span>
+<span id="cb47-24"><a href="#cb47-24" tabindex="-1"></a>lm1_log <span class="ot">&lt;-</span> <span class="fu">lm</span>((weight) <span class="sc">~</span> <span class="fu">log</span>(week), <span class="at">data =</span> rat_training)</span>
+<span id="cb47-25"><a href="#cb47-25" tabindex="-1"></a></span>
+<span id="cb47-26"><a href="#cb47-26" tabindex="-1"></a></span>
+<span id="cb47-27"><a href="#cb47-27" tabindex="-1"></a>conf_inter_log <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm1_log, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb47-28"><a href="#cb47-28" tabindex="-1"></a>pred_inter_log <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">cbind</span>(new_x, <span class="fu">predict</span>(lm1_log, <span class="at">newdata =</span> new_x, <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>, <span class="at">level =</span> <span class="dv">1</span> <span class="sc">-</span> alpha)), <span class="fu">c</span>(<span class="st">&quot;week&quot;</span>, <span class="st">&quot;weight&quot;</span>, <span class="st">&quot;lwr&quot;</span>, <span class="st">&quot;upr&quot;</span>))</span>
+<span id="cb47-29"><a href="#cb47-29" tabindex="-1"></a></span>
+<span id="cb47-30"><a href="#cb47-30" tabindex="-1"></a></span>
+<span id="cb47-31"><a href="#cb47-31" tabindex="-1"></a>IC_log_plot<span class="ot">&lt;-</span>rat_point_train_test_log <span class="sc">+</span><span class="fu">geom_ribbon</span>(<span class="at">data =</span> conf_inter_log, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;red&quot;</span> , <span class="at">alpha =</span> <span class="fl">0.35</span>)<span class="sc">+</span><span class="fu">geom_ribbon</span>(<span class="at">data =</span> pred_inter_log, <span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>)</span>
+<span id="cb47-32"><a href="#cb47-32" tabindex="-1"></a></span>
+<span id="cb47-33"><a href="#cb47-33" tabindex="-1"></a></span>
+<span id="cb47-34"><a href="#cb47-34" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat_point_train_test_log ,IC_log_plot,CI_lm2_ortho, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><span style="font-size: 30 px;">📈</span> Graphically, we prefer
+<code>lm2_ortho</code>.</p>
+</div>
+<div id="compare-with-ortho-poly-model" class="section level2">
+<h2>6.3. Compare with ortho poly model</h2>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>lm2_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>lm1_log <span class="ot">&lt;-</span> <span class="fu">lm</span>((weight) <span class="sc">~</span> <span class="fu">log</span>(week), <span class="at">data =</span> rat_training)</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a>RMSE_lm_log<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm1_log, <span class="at">newdata =</span> rat_test)))</span>
+<span id="cb48-9"><a href="#cb48-9" tabindex="-1"></a>RMSE_lm2_ortho<span class="ot">&lt;-</span><span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm2_ortho, <span class="at">newdata =</span> rat_test))</span>
+<span id="cb48-10"><a href="#cb48-10" tabindex="-1"></a>RMSE<span class="ot">&lt;-</span><span class="fu">cbind.data.frame</span>(RMSE_lm_log,RMSE_lm2_ortho)</span>
+<span id="cb48-11"><a href="#cb48-11" tabindex="-1"></a>RMSE<span class="sc">%&gt;%</span>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["RMSE_lm_log"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RMSE_lm2_ortho"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"4.757017","2":"3.721599"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> We prefer
+<code>lm2_ortho</code>.</p>
+</div>
+<div id="polynom-in-logx" class="section level2">
+<h2>6.4. Polynom in log(X)</h2>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a>rat_plot <span class="ot">&lt;-</span></span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a>  rat_weight <span class="sc">%&gt;%</span> </span>
+<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log</span>(week), <span class="at">y =</span> (weight)) <span class="sc">+</span> </span>
+<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">colour=</span><span class="st">&quot;#993399&quot;</span>) <span class="sc">+</span>  <span class="fu">xlab</span>(<span class="st">&quot;log_week&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;weight (grams)&quot;</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> rat_plot <span class="sc">+</span>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">1</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#339900&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;lm1_log&quot;</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span>  rat_plot <span class="sc">+</span>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">2</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#339900&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;lm2_log&quot;</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>plot3 <span class="ot">&lt;-</span>  rat_plot <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">3</span>), <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;#153399&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;lm3_log&quot;</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" tabindex="-1"></a><span class="fu">grid.arrange</span>(rat_plot,plot1, plot2, plot3, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="Lecture2-Polynomial_regression_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a>lm2_ortho <span class="ot">&lt;-</span> <span class="fu">lm</span>(weight <span class="sc">~</span> <span class="fu">poly</span>(week, <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>lm1_log <span class="ot">&lt;-</span> <span class="fu">lm</span>((weight) <span class="sc">~</span> <span class="fu">poly</span>(<span class="fu">log</span>(week), <span class="at">degree =</span> <span class="dv">1</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>lm2_log <span class="ot">&lt;-</span> <span class="fu">lm</span>((weight) <span class="sc">~</span> <span class="fu">poly</span>(<span class="fu">log</span>(week), <span class="at">degree =</span> <span class="dv">2</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>lm3_log <span class="ot">&lt;-</span> <span class="fu">lm</span>((weight) <span class="sc">~</span> <span class="fu">poly</span>(<span class="fu">log</span>(week), <span class="at">degree =</span> <span class="dv">3</span>), <span class="at">data =</span> rat_training)</span>
+<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>RMSE_lm2_ortho <span class="ot">&lt;-</span><span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,<span class="fu">predict</span>(lm2_ortho, <span class="at">newdata =</span> rat_test))</span>
+<span id="cb50-8"><a href="#cb50-8" tabindex="-1"></a>RMSE_lm1_log<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm1_log, <span class="at">newdata =</span> rat_test)))</span>
+<span id="cb50-9"><a href="#cb50-9" tabindex="-1"></a>RMSE_lm2_log<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm2_log, <span class="at">newdata =</span> rat_test)))</span>
+<span id="cb50-10"><a href="#cb50-10" tabindex="-1"></a>RMSE_lm3_log<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_test<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm2_log, <span class="at">newdata =</span> rat_test)))</span>
+<span id="cb50-11"><a href="#cb50-11" tabindex="-1"></a></span>
+<span id="cb50-12"><a href="#cb50-12" tabindex="-1"></a>RMSE_test<span class="ot">&lt;-</span><span class="fu">c</span>(RMSE_lm2_ortho,RMSE_lm1_log,RMSE_lm2_log,RMSE_lm3_log )</span>
+<span id="cb50-13"><a href="#cb50-13" tabindex="-1"></a><span class="co">#RMSE_test%&gt;%rmarkdown::paged_table()</span></span>
+<span id="cb50-14"><a href="#cb50-14" tabindex="-1"></a></span>
+<span id="cb50-15"><a href="#cb50-15" tabindex="-1"></a>RMSE_lm2_ortho_train <span class="ot">&lt;-</span><span class="fu">rmse</span>(rat_training<span class="sc">$</span>weight,<span class="fu">predict</span>(lm2_ortho, <span class="at">newdata =</span> rat_training))</span>
+<span id="cb50-16"><a href="#cb50-16" tabindex="-1"></a>RMSE_lm1_log_train<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_training<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm1_log, <span class="at">newdata =</span>rat_training)))</span>
+<span id="cb50-17"><a href="#cb50-17" tabindex="-1"></a>RMSE_lm2_log_train<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_training<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm2_log, <span class="at">newdata =</span> rat_training)))</span>
+<span id="cb50-18"><a href="#cb50-18" tabindex="-1"></a>RMSE_lm3_log_train<span class="ot">&lt;-</span> <span class="fu">rmse</span>(rat_training<span class="sc">$</span>weight,(<span class="fu">predict</span>(lm2_log, <span class="at">newdata =</span> rat_training)))</span>
+<span id="cb50-19"><a href="#cb50-19" tabindex="-1"></a></span>
+<span id="cb50-20"><a href="#cb50-20" tabindex="-1"></a>RMSE_train<span class="ot">&lt;-</span><span class="fu">c</span>(RMSE_lm2_ortho_train,RMSE_lm1_log_train,RMSE_lm2_log_train,RMSE_lm3_log_train )</span>
+<span id="cb50-21"><a href="#cb50-21" tabindex="-1"></a><span class="co">#RMSE_train%&gt;%rmarkdown::paged_table()</span></span>
+<span id="cb50-22"><a href="#cb50-22" tabindex="-1"></a></span>
+<span id="cb50-23"><a href="#cb50-23" tabindex="-1"></a>RMSE<span class="ot">&lt;-</span><span class="fu">rbind.data.frame</span>(RMSE_train,RMSE_test)</span>
+<span id="cb50-24"><a href="#cb50-24" tabindex="-1"></a><span class="fu">names</span>(RMSE)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&#39;lm2_ortho&#39;</span>,<span class="st">&#39;RMSE_lm1_log&#39;</span>,<span class="st">&#39;RMSE_lm2_log&#39;</span>,<span class="st">&#39;RMSE_lm3_log&#39;</span>)</span>
+<span id="cb50-25"><a href="#cb50-25" tabindex="-1"></a><span class="fu">row.names</span>(RMSE)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&#39;Train&#39;</span>,<span class="st">&#39;Test&#39;</span>)</span>
+<span id="cb50-26"><a href="#cb50-26" tabindex="-1"></a>RMSE<span class="sc">%&gt;%</span>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["lm2_ortho"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RMSE_lm1_log"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["RMSE_lm2_log"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["RMSE_lm3_log"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"4.178910","2":"14.559365","3":"3.326067","4":"3.326067","_rn_":"Train"},{"1":"3.721599","2":"4.757017","3":"32.243657","4":"32.243657","_rn_":"Test"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span> Still prefer
+<code>lm2_ortho</code>.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "Lecture2-Polynomial_regression_files/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

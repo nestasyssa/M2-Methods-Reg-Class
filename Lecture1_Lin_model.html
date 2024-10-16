@@ -1,0 +1,3063 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Katia Meziani" />
+
+
+<title>Methods for Regression and classification</title>
+
+<script src="Lecture1_Lin_model_files/header-attrs-2.28/header-attrs.js"></script>
+<script src="Lecture1_Lin_model_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="Lecture1_Lin_model_files/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="Lecture1_Lin_model_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="Lecture1_Lin_model_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="Lecture1_Lin_model_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="Lecture1_Lin_model_files/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="Lecture1_Lin_model_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="Lecture1_Lin_model_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="Lecture1_Lin_model_files/navigation-1.1/tabsets.js"></script>
+<script src="Lecture1_Lin_model_files/navigation-1.1/codefolding.js"></script>
+<link href="Lecture1_Lin_model_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="Lecture1_Lin_model_files/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="Lecture1_Lin_model_files/kePrint-0.0.1/kePrint.js"></script>
+<link href="Lecture1_Lin_model_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Methods for Regression and
+classification</h1>
+<h3 class="subtitle">Lecture 1: Multivariate linear gaussian regression
+model</h3>
+<h4 class="author">Katia Meziani</h4>
+
+</div>
+
+
+<style>
+  .attention {
+    font-size: 24px;
+    color: red;
+    font-weight: bold;
+  }
+  
+  
+
+  
+  
+</style>
+<style>
+    .underline {
+      text-decoration: underline;
+    }
+  </style>
+<style contenteditable>
+  .brd {
+    border: 2px solid black; ; padding: 5px
+  }
+</style>
+<style contenteditable>
+  .brdred {
+    border: 2px solid #B22222 ; 
+    padding: 10px; /* Ajouter de l'espace autour du texte */
+    background-color: #f9f9f9; /* Optionnel : couleur de fond pour le texte */
+    margin: 10px 0; /* Ajouter de l'espace au-dessus et en-dessous de l'encadrement */
+  }
+</style>
+<style>
+  .solution {
+    font-size: 24px;
+    color: yellow; /* Couleur jaune pour simuler la lumière */
+  }
+</style>
+<style>
+    .underline {
+      text-decoration: underline;
+    }
+  </style>
+<style>
+  .brdgreen {
+    border: 2px solid green; /* Bordure verte */
+    padding: 10px; /* Espace interne */
+    background-color: rgba(114, 213, 114, 0.03); /* Fond vert pastel très clair avec transparence */
+    margin: 10px 0; /* Espace autour de l'encadrement */
+  }
+</style>
+<style>
+  .brdblack {
+    border: 2px solid black; /* Définir la couleur et l'épaisseur de la bordure */
+    padding: 10px; /* Ajouter de l'espace autour du texte */
+    background-color: #f9f9f9; /* Optionnel : couleur de fond pour le texte */
+    margin: 10px 0; /* Ajouter de l'espace au-dessus et en-dessous de l'encadrement */
+  }
+</style>
+<div id="multivariate-linear-gaussian-regression-model"
+class="section level1">
+<h1>1. Multivariate linear gaussian regression model</h1>
+<div id="the-data-set-ozone" class="section level2">
+<h2>1.1. The data set Ozone</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>ozone1 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;ozone1.txt&quot;</span>,<span class="at">header=</span><span class="cn">TRUE</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>, <span class="at">dec=</span><span class="st">&quot;,&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>ozone1<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">as.factor</span>(ozone1<span class="sc">$</span>Date),<span class="at">format =</span> <span class="st">&quot;%Y%m%d&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>ozone1<span class="sc">$</span>vent<span class="ot">&lt;-</span><span class="fu">as.factor</span>(ozone1<span class="sc">$</span>vent)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>ozone1<span class="sc">$</span>pluie<span class="ot">&lt;-</span><span class="fu">as.factor</span>(ozone1<span class="sc">$</span>pluie)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>ozone1 <span class="ot">&lt;-</span> ozone1 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), as.numeric))</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>ozone1 <span class="ot">&lt;-</span> ozone1 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.integer), as.numeric))</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>ozone1  <span class="ot">&lt;-</span> ozone1  <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(Date) </span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>Ozone<span class="ot">&lt;-</span>ozone1[,<span class="dv">2</span><span class="sc">:</span><span class="dv">12</span>]</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">paged_table</span>(Ozone)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["maxO3"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["T9"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["T12"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["T15"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Ne9"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Ne12"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Ne15"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Vx9"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["Vx12"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["Vx15"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["maxO3v"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"87","2":"15.6","3":"18.5","4":"18.4","5":"4","6":"4","7":"8","8":"0.6946","9":"-1.7101","10":"-0.6946","11":"84"},{"1":"82","2":"17.0","3":"18.4","4":"17.7","5":"5","6":"5","7":"7","8":"-4.3301","9":"-4.0000","10":"-3.0000","11":"87"},{"1":"92","2":"15.3","3":"17.6","4":"19.5","5":"2","6":"5","7":"4","8":"2.9544","9":"1.8794","10":"0.5209","11":"82"},{"1":"114","2":"16.2","3":"19.7","4":"22.5","5":"1","6":"1","7":"0","8":"0.9848","9":"0.3473","10":"-0.1736","11":"92"},{"1":"94","2":"17.4","3":"20.5","4":"20.4","5":"8","6":"8","7":"7","8":"-0.5000","9":"-2.9544","10":"-4.3301","11":"114"},{"1":"80","2":"17.7","3":"19.8","4":"18.3","5":"6","6":"6","7":"7","8":"-5.6382","9":"-5.0000","10":"-6.0000","11":"94"},{"1":"79","2":"16.8","3":"15.6","4":"14.9","5":"7","6":"8","7":"8","8":"-4.3301","9":"-1.8794","10":"-3.7588","11":"80"},{"1":"79","2":"14.9","3":"17.5","4":"18.9","5":"5","6":"5","7":"4","8":"0.0000","9":"-1.0419","10":"-1.3892","11":"99"},{"1":"101","2":"16.1","3":"19.6","4":"21.4","5":"2","6":"4","7":"4","8":"-0.7660","9":"-1.0261","10":"-2.2981","11":"79"},{"1":"106","2":"18.3","3":"21.9","4":"22.9","5":"5","6":"6","7":"8","8":"1.2856","9":"-2.2981","10":"-3.9392","11":"101"},{"1":"101","2":"17.3","3":"19.3","4":"20.2","5":"7","6":"7","7":"3","8":"-1.5000","9":"-1.5000","10":"-0.8682","11":"106"},{"1":"90","2":"17.6","3":"20.3","4":"17.4","5":"7","6":"6","7":"8","8":"0.6946","9":"-1.0419","10":"-0.6946","11":"101"},{"1":"72","2":"18.3","3":"19.6","4":"19.4","5":"7","6":"5","7":"6","8":"-0.8682","9":"-2.7362","10":"-6.8944","11":"90"},{"1":"70","2":"17.1","3":"18.2","4":"18.0","5":"7","6":"7","7":"7","8":"-4.3301","9":"-7.8785","10":"-5.1962","11":"72"},{"1":"83","2":"15.4","3":"17.4","4":"16.6","5":"8","6":"7","7":"7","8":"-4.3301","9":"-2.0521","10":"-3.0000","11":"70"},{"1":"88","2":"15.9","3":"19.1","4":"21.5","5":"6","6":"5","7":"4","8":"0.5209","9":"-2.9544","10":"-1.0261","11":"83"},{"1":"145","2":"21.0","3":"24.6","4":"26.9","5":"0","6":"1","7":"1","8":"-0.3420","9":"-1.5321","10":"-0.6840","11":"121"},{"1":"81","2":"16.2","3":"22.4","4":"23.4","5":"8","6":"3","7":"1","8":"0.0000","9":"0.3473","10":"-2.5712","11":"145"},{"1":"121","2":"19.7","3":"24.2","4":"26.9","5":"2","6":"1","7":"0","8":"1.5321","9":"1.7321","10":"2.0000","11":"81"},{"1":"146","2":"23.6","3":"28.6","4":"28.4","5":"1","6":"1","7":"2","8":"1.0000","9":"-1.9284","10":"-1.2155","11":"121"},{"1":"121","2":"20.4","3":"25.2","4":"27.7","5":"1","6":"0","7":"0","8":"0.0000","9":"-0.5209","10":"1.0261","11":"146"},{"1":"146","2":"27.0","3":"32.7","4":"33.7","5":"0","6":"0","7":"0","8":"2.9544","9":"6.5778","10":"4.3301","11":"121"},{"1":"108","2":"24.0","3":"23.5","4":"25.1","5":"4","6":"4","7":"0","8":"-2.5712","9":"-3.8567","10":"-4.6985","11":"146"},{"1":"83","2":"19.7","3":"22.9","4":"24.8","5":"7","6":"6","7":"6","8":"-2.5981","9":"-3.9392","10":"-4.9240","11":"108"},{"1":"57","2":"20.1","3":"22.4","4":"22.8","5":"7","6":"6","7":"7","8":"-5.6382","9":"-3.8302","10":"-4.5963","11":"83"},{"1":"81","2":"19.6","3":"25.1","4":"27.2","5":"3","6":"4","7":"4","8":"-1.9284","9":"-2.5712","10":"-4.3301","11":"57"},{"1":"67","2":"19.5","3":"23.4","4":"23.7","5":"5","6":"5","7":"4","8":"-1.5321","9":"-3.0642","10":"-0.8682","11":"81"},{"1":"70","2":"18.8","3":"22.7","4":"24.9","5":"5","6":"2","7":"1","8":"0.6840","9":"0.0000","10":"1.3681","11":"67"},{"1":"106","2":"24.1","3":"28.4","4":"30.1","5":"0","6":"0","7":"1","8":"2.8191","9":"3.9392","10":"3.4641","11":"70"},{"1":"139","2":"26.6","3":"30.1","4":"31.9","5":"0","6":"1","7":"4","8":"1.8794","9":"2.0000","10":"1.3681","11":"106"},{"1":"79","2":"19.5","3":"18.8","4":"17.8","5":"8","6":"8","7":"8","8":"0.6946","9":"-0.8660","10":"-1.0261","11":"139"},{"1":"93","2":"16.8","3":"18.2","4":"22.0","5":"8","6":"8","7":"6","8":"0.0000","9":"0.0000","10":"1.2856","11":"79"},{"1":"97","2":"20.8","3":"23.7","4":"25.0","5":"2","6":"3","7":"4","8":"0.0000","9":"1.7101","10":"-2.7362","11":"93"},{"1":"113","2":"17.5","3":"18.2","4":"22.7","5":"8","6":"8","7":"5","8":"-3.7588","9":"-3.9392","10":"-4.6985","11":"97"},{"1":"72","2":"18.1","3":"21.2","4":"23.9","5":"7","6":"6","7":"4","8":"-2.5981","9":"-3.9392","10":"-3.7588","11":"113"},{"1":"88","2":"19.2","3":"22.0","4":"25.2","5":"4","6":"7","7":"4","8":"-1.9696","9":"-3.0642","10":"-4.0000","11":"72"},{"1":"77","2":"19.4","3":"20.7","4":"22.5","5":"7","6":"8","7":"7","8":"-6.5778","9":"-5.6382","10":"-9.0000","11":"88"},{"1":"71","2":"19.2","3":"21.0","4":"22.4","5":"6","6":"4","7":"6","8":"-7.8785","9":"-6.8937","10":"-6.8937","11":"77"},{"1":"56","2":"13.8","3":"17.3","4":"18.5","5":"8","6":"8","7":"6","8":"1.5000","9":"-3.8302","10":"-2.0521","11":"71"},{"1":"45","2":"14.3","3":"14.5","4":"15.2","5":"8","6":"8","7":"8","8":"0.6840","9":"4.0000","10":"2.9544","11":"56"},{"1":"67","2":"15.6","3":"18.6","4":"20.3","5":"5","6":"7","7":"5","8":"-3.2139","9":"-3.7588","10":"-4.0000","11":"45"},{"1":"67","2":"16.9","3":"19.1","4":"19.5","5":"5","6":"5","7":"6","8":"-2.2981","9":"-3.7588","10":"0.0000","11":"67"},{"1":"84","2":"17.4","3":"20.4","4":"21.4","5":"3","6":"4","7":"6","8":"0.0000","9":"0.3473","10":"-2.5981","11":"67"},{"1":"63","2":"15.1","3":"20.5","4":"20.6","5":"8","6":"6","7":"6","8":"2.0000","9":"-5.3623","10":"-6.1284","11":"84"},{"1":"69","2":"15.1","3":"15.6","4":"15.9","5":"8","6":"8","7":"8","8":"-4.5963","9":"-3.8302","10":"-4.3301","11":"63"},{"1":"92","2":"16.7","3":"19.1","4":"19.3","5":"7","6":"6","7":"4","8":"-2.0521","9":"-4.4995","10":"-2.7362","11":"69"},{"1":"88","2":"16.9","3":"20.3","4":"20.7","5":"6","6":"6","7":"5","8":"-2.8191","9":"-3.4641","10":"-3.0000","11":"92"},{"1":"66","2":"18.0","3":"21.6","4":"23.3","5":"8","6":"6","7":"5","8":"-3.0000","9":"-3.5000","10":"-3.2139","11":"88"},{"1":"72","2":"18.6","3":"21.9","4":"23.6","5":"4","6":"7","7":"6","8":"0.8660","9":"-1.9696","10":"-1.0261","11":"66"},{"1":"81","2":"18.8","3":"22.5","4":"23.9","5":"6","6":"3","7":"2","8":"0.5209","9":"-1.0000","10":"-2.0000","11":"72"},{"1":"83","2":"19.0","3":"22.5","4":"24.1","5":"2","6":"4","7":"6","8":"0.0000","9":"-1.0261","10":"0.5209","11":"81"},{"1":"149","2":"19.9","3":"26.9","4":"29.0","5":"3","6":"4","7":"3","8":"1.0000","9":"-0.9397","10":"-0.6428","11":"83"},{"1":"153","2":"23.8","3":"27.7","4":"29.4","5":"1","6":"1","7":"4","8":"0.9397","9":"1.5000","10":"0.0000","11":"149"},{"1":"159","2":"24.0","3":"28.3","4":"26.5","5":"2","6":"2","7":"7","8":"-0.3420","9":"1.2856","10":"-2.0000","11":"153"},{"1":"149","2":"23.3","3":"27.6","4":"28.8","5":"4","6":"6","7":"3","8":"0.8660","9":"-1.5321","10":"-0.1736","11":"159"},{"1":"160","2":"25.0","3":"29.6","4":"31.1","5":"0","6":"3","7":"5","8":"1.5321","9":"-0.6840","10":"2.8191","11":"149"},{"1":"156","2":"24.9","3":"30.5","4":"32.2","5":"0","6":"1","7":"4","8":"-0.5000","9":"-1.8794","10":"-1.2856","11":"160"},{"1":"84","2":"20.5","3":"26.3","4":"27.8","5":"1","6":"0","7":"2","8":"-1.3681","9":"-0.6946","10":"0.0000","11":"156"},{"1":"126","2":"25.3","3":"29.5","4":"31.2","5":"1","6":"4","7":"4","8":"3.0000","9":"3.7588","10":"5.0000","11":"84"},{"1":"116","2":"21.3","3":"23.8","4":"22.1","5":"7","6":"7","7":"8","8":"0.0000","9":"-2.3941","10":"-1.3892","11":"126"},{"1":"77","2":"20.0","3":"18.2","4":"23.6","5":"5","6":"7","7":"6","8":"-3.4641","9":"-2.5981","10":"-3.7588","11":"116"},{"1":"63","2":"18.7","3":"20.6","4":"20.3","5":"6","6":"7","7":"7","8":"-5.0000","9":"-4.9240","10":"-5.6382","11":"77"},{"1":"54","2":"18.6","3":"18.7","4":"17.8","5":"8","6":"8","7":"8","8":"-4.6985","9":"-2.5000","10":"-0.8682","11":"63"},{"1":"65","2":"19.2","3":"23.0","4":"22.7","5":"8","6":"7","7":"7","8":"-3.8302","9":"-4.9240","10":"-5.6382","11":"54"},{"1":"72","2":"19.9","3":"21.6","4":"20.4","5":"7","6":"7","7":"8","8":"-3.0000","9":"-4.5963","10":"-5.1962","11":"65"},{"1":"60","2":"18.7","3":"21.4","4":"21.7","5":"7","6":"7","7":"7","8":"-5.6382","9":"-6.0622","10":"-6.8937","11":"72"},{"1":"70","2":"18.4","3":"17.1","4":"20.5","5":"3","6":"6","7":"3","8":"-5.9088","9":"-3.2139","10":"-4.4995","11":"60"},{"1":"77","2":"17.1","3":"20.0","4":"20.8","5":"4","6":"5","7":"4","8":"-1.9284","9":"-1.0261","10":"0.5209","11":"70"},{"1":"98","2":"17.8","3":"22.8","4":"24.3","5":"1","6":"1","7":"0","8":"0.0000","9":"-1.5321","10":"-1.0000","11":"77"},{"1":"111","2":"20.9","3":"25.2","4":"26.7","5":"1","6":"5","7":"2","8":"-1.0261","9":"-3.0000","10":"-2.2981","11":"98"},{"1":"75","2":"18.8","3":"20.5","4":"26.0","5":"8","6":"7","7":"1","8":"-0.8660","9":"0.0000","10":"0.0000","11":"111"},{"1":"116","2":"23.5","3":"29.8","4":"31.7","5":"1","6":"3","7":"5","8":"1.8794","9":"1.3681","10":"0.6946","11":"75"},{"1":"109","2":"20.8","3":"23.7","4":"26.6","5":"8","6":"5","7":"4","8":"-1.0261","9":"-1.7101","10":"-3.2139","11":"116"},{"1":"67","2":"18.8","3":"21.1","4":"18.9","5":"7","6":"7","7":"8","8":"-5.3623","9":"-5.3623","10":"-2.5000","11":"86"},{"1":"76","2":"17.8","3":"21.3","4":"24.0","5":"7","6":"5","7":"5","8":"-3.0642","9":"-2.2981","10":"-3.9392","11":"67"},{"1":"113","2":"20.6","3":"24.8","4":"27.0","5":"1","6":"1","7":"2","8":"1.3681","9":"0.8682","10":"-2.2981","11":"76"},{"1":"117","2":"21.6","3":"26.9","4":"28.6","5":"6","6":"6","7":"4","8":"1.5321","9":"1.9284","10":"1.9284","11":"113"},{"1":"131","2":"22.7","3":"28.4","4":"30.1","5":"5","6":"3","7":"3","8":"0.1736","9":"-1.9696","10":"-1.9284","11":"117"},{"1":"166","2":"19.8","3":"27.2","4":"30.8","5":"4","6":"0","7":"1","8":"0.6428","9":"-0.8660","10":"0.6840","11":"131"},{"1":"159","2":"25.0","3":"33.5","4":"35.5","5":"1","6":"1","7":"1","8":"1.0000","9":"0.6946","10":"-1.7101","11":"166"},{"1":"100","2":"20.1","3":"22.9","4":"27.6","5":"8","6":"8","7":"6","8":"1.2856","9":"-1.7321","10":"-0.6840","11":"159"},{"1":"114","2":"21.0","3":"26.3","4":"26.4","5":"7","6":"4","7":"5","8":"3.0642","9":"2.8191","10":"1.3681","11":"100"},{"1":"112","2":"21.0","3":"24.4","4":"26.8","5":"1","6":"6","7":"3","8":"4.0000","9":"4.0000","10":"3.7588","11":"114"},{"1":"101","2":"16.9","3":"17.8","4":"20.6","5":"7","6":"7","7":"7","8":"-2.0000","9":"-0.5209","10":"1.8794","11":"112"},{"1":"76","2":"17.5","3":"18.6","4":"18.7","5":"7","6":"7","7":"7","8":"-3.4641","9":"-4.0000","10":"-1.7321","11":"101"},{"1":"59","2":"16.5","3":"20.3","4":"20.3","5":"5","6":"7","7":"6","8":"-4.3301","9":"-5.3623","10":"-4.5000","11":"76"},{"1":"78","2":"17.7","3":"20.2","4":"21.5","5":"5","6":"5","7":"3","8":"0.0000","9":"0.5209","10":"0.0000","11":"59"},{"1":"76","2":"17.3","3":"22.7","4":"24.6","5":"4","6":"5","7":"6","8":"-2.9544","9":"-2.9544","10":"-2.0000","11":"78"},{"1":"55","2":"15.3","3":"16.8","4":"19.2","5":"8","6":"7","7":"5","8":"-1.8794","9":"-1.8794","10":"-2.3941","11":"76"},{"1":"71","2":"15.9","3":"19.2","4":"19.5","5":"7","6":"5","7":"3","8":"-6.1284","9":"0.0000","10":"-1.3892","11":"55"},{"1":"66","2":"16.2","3":"18.9","4":"19.3","5":"2","6":"5","7":"6","8":"-1.3681","9":"-0.8682","10":"1.7101","11":"71"},{"1":"59","2":"18.3","3":"18.3","4":"19.0","5":"7","6":"7","7":"7","8":"-3.9392","9":"-1.9284","10":"-1.7101","11":"66"},{"1":"68","2":"16.9","3":"20.8","4":"22.5","5":"6","6":"5","7":"7","8":"-1.5000","9":"-3.4641","10":"-3.0642","11":"59"},{"1":"63","2":"17.3","3":"19.8","4":"19.4","5":"7","6":"8","7":"8","8":"-4.5963","9":"-6.0622","10":"-4.3301","11":"68"},{"1":"78","2":"14.2","3":"22.2","4":"22.0","5":"5","6":"5","7":"6","8":"-0.8660","9":"-5.0000","10":"-5.0000","11":"62"},{"1":"74","2":"15.8","3":"18.7","4":"19.1","5":"8","6":"7","7":"7","8":"-4.5963","9":"-6.8937","10":"-7.5175","11":"78"},{"1":"71","2":"15.2","3":"17.9","4":"18.6","5":"6","6":"5","7":"1","8":"-1.0419","9":"-1.3681","10":"-1.0419","11":"74"},{"1":"69","2":"17.1","3":"17.7","4":"17.5","5":"6","6":"7","7":"8","8":"-5.1962","9":"-2.7362","10":"-1.0419","11":"71"},{"1":"71","2":"15.4","3":"17.7","4":"16.6","5":"4","6":"5","7":"5","8":"-3.8302","9":"0.0000","10":"1.3892","11":"69"},{"1":"60","2":"13.7","3":"14.0","4":"15.8","5":"4","6":"5","7":"4","8":"0.0000","9":"3.2139","10":"0.0000","11":"71"},{"1":"42","2":"12.7","3":"14.3","4":"14.9","5":"8","6":"7","7":"7","8":"-2.5000","9":"-3.2139","10":"-2.5000","11":"60"},{"1":"65","2":"14.8","3":"16.3","4":"15.9","5":"7","6":"7","7":"7","8":"-4.3301","9":"-6.0622","10":"-5.1962","11":"42"},{"1":"71","2":"15.5","3":"18.0","4":"17.4","5":"7","6":"7","7":"6","8":"-3.9392","9":"-3.0642","10":"0.0000","11":"65"},{"1":"96","2":"11.3","3":"19.4","4":"20.2","5":"3","6":"3","7":"3","8":"-0.1736","9":"3.7588","10":"3.8302","11":"71"},{"1":"98","2":"15.2","3":"19.7","4":"20.3","5":"2","6":"2","7":"2","8":"4.0000","9":"5.0000","10":"4.3301","11":"96"},{"1":"92","2":"14.7","3":"17.6","4":"18.2","5":"1","6":"4","7":"6","8":"5.1962","9":"5.1423","10":"3.5000","11":"98"},{"1":"76","2":"13.3","3":"17.7","4":"17.7","5":"7","6":"7","7":"6","8":"-0.9397","9":"-0.7660","10":"-0.5000","11":"92"},{"1":"84","2":"13.3","3":"17.7","4":"17.8","5":"3","6":"5","7":"6","8":"0.0000","9":"-1.0000","10":"-1.2856","11":"76"},{"1":"77","2":"16.2","3":"20.8","4":"22.1","5":"6","6":"5","7":"5","8":"-0.6946","9":"-2.0000","10":"-1.3681","11":"71"},{"1":"99","2":"16.9","3":"23.0","4":"22.6","5":"6","6":"4","7":"7","8":"1.5000","9":"0.8682","10":"0.8682","11":"77"},{"1":"83","2":"16.9","3":"19.8","4":"22.1","5":"6","6":"5","7":"3","8":"-4.0000","9":"-3.7588","10":"-4.0000","11":"99"},{"1":"70","2":"15.7","3":"18.6","4":"20.7","5":"7","6":"7","7":"7","8":"0.0000","9":"-1.0419","10":"-4.0000","11":"83"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>The Ozone dataset contains the response variable <code>maxO3</code>
+and the covariate <span class="math inline">\(X_1
+:=\)</span><code>T9</code>, there are <span class="math inline">\(X_2
+:=\)</span><code>T12</code>, <span
+class="math inline">\(X_3:=\)</span><code>T15</code>, <span
+class="math inline">\(X_4 :=\)</span><code>Ne9</code>, <span
+class="math inline">\(X_5:=\)</span><code>Ne12</code>, <span
+class="math inline">\(X_6 :=\)</span><code>Ne15</code>, <span
+class="math inline">\(X_7 :=\)</span><code>Vx9</code>, <span
+class="math inline">\(X_8:=\)</span><code>Vx12</code>, and <span
+class="math inline">\(X_9:=\)</span><code>Vx15</code>.</p>
+</div>
+<div id="modelization" class="section level2">
+<h2>1.2. Modelization</h2>
+<p>Define by <span class="math inline">\(y = \left(y_1\  \cdots \
+y_n\right)^\top\)</span> and for <span
+class="math inline">\(p=9\)</span> the <em>design</em> matrix is such
+that <span class="math display">\[
+X=(\boldsymbol{1}_n,\mathbf{X}_1,\cdots,\mathbf{X}_p)=\begin{pmatrix}
+  1 &amp; x_{11} &amp; \cdots &amp; x_{1p}\\
+\vdots &amp; \vdots&amp;\vdots&amp;\vdots\\
+1 &amp; x_{i1} &amp; \cdots &amp; x_{ip}\\
+\vdots &amp; \vdots&amp;\vdots&amp;\vdots\\
+1 &amp; x_{n1} &amp; \cdots &amp; x_{np} \\
+\end{pmatrix}=\begin{pmatrix}
+\mathbf{x}^\top_1 \\
+\vdots\\
+\mathbf{x}^\top_n
+\end{pmatrix}\in\mathbb{R}^{n\times (p+1)}
+\]</span></p>
+<div class="brdblack">
+<p><span style="color: blue;"> <strong>The multivariate linear gaussian
+regression model.</strong> </span> Let <span
+class="math inline">\((Y_i,x_i)_{i=1,\cdots,n}\)</span>, we define the
+simple linear gaussian model as follows <span class="math display">\[
+Y_i=\beta_0+\beta_1x_{i1}+\cdots+\beta_px_{ip}+\epsilon_i,\quad
+i=1,\cdots,n
+\]</span></p>
+<p><span style="color: blue;"> <strong>The multivariate linear gaussian
+regression model. (matrix form).</strong> </span></p>
+<p><span
+class="math display">\[Y=\beta_0\boldsymbol{1}_n+\mathbf{X}_1\beta_1+\cdots+\mathbf{X}_p\beta_p+\epsilon=X\beta+\epsilon\]</span>
+where the following <strong>Assumptions</strong> are satisfied:</p>
+<ul>
+<li><strong>[P1]: </strong> The <span
+class="math inline">\(\epsilon_i\)</span> are centered.</li>
+<li><strong>[P2]: </strong> The <span
+class="math inline">\(\epsilon_i\)</span> have a constant variance
+(noise level) <span class="math inline">\(\sigma^2&gt;0\)</span>
+(<em>homoscedasticity</em>).</li>
+<li><strong>[P3]: </strong> The <span
+class="math inline">\(\epsilon_i\)</span> are uncorrelated.</li>
+<li><strong>[P4]: </strong> The <span
+class="math inline">\(\epsilon_i\)</span> are Gaussian.</li>
+</ul>
+<p>These assumptions can be summarized as <span
+class="math inline">\(\epsilon \sim \mathscr{N}(\boldsymbol{0}_n,
+\sigma^2\mathbf{I}_n)\)</span>.</p>
+<p><span style="color: blue;"> <u> <strong>Prediction with the estimated
+model.</strong> </u> </span> <span class="math display">\[\widehat{Y}_i
+= \widehat{f}\big(x_i\big) = \widehat{\beta}_0 + \widehat{\beta}_1
+x_{i1}+\cdots+\widehat{\beta}_p x_{ip}\quad
+\text{and}\quad\widehat{Y}=X\widehat {\beta}\]</span></p>
+</div>
+<p><br></p>
+</div>
+<div id="declaration-of-the-model" class="section level2">
+<h2>1.3. Declaration of the model</h2>
+</div>
+<div id="traintest-split" class="section level2">
+<h2>1.4. Train/Test Split</h2>
+<p>We split our dataset into two parts: 80% for training and 20% for
+testing. This separation allows us to evaluate the performance of our
+model on unseen data, ensuring that our model’s quality and
+generalization capabilities are assessed on a separate subset of data
+that it has not been exposed to during training</p>
+<p>Here is a classic random split.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>ozone_split    <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">initial_split</span>(Ozone, <span class="at">prop =</span> <span class="fl">0.8</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>train<span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">training</span>(ozone_split)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>test <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">testing</span>(ozone_split)</span></code></pre></div>
+<p>In the case of data collected over several consecutive days (our
+setting), this type of train/test split can introduce biases, especially
+if the measurements are time-correlated. In this case, it is better to
+perform a chronological split, meaning using the earlier observations
+for training and the later ones for testing.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>train_size <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fl">0.8</span> <span class="sc">*</span> <span class="fu">nrow</span>(Ozone))</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>train <span class="ot">&lt;-</span> Ozone[<span class="dv">1</span><span class="sc">:</span>train_size, ]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>test <span class="ot">&lt;-</span> Ozone[(train_size <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span><span class="fu">nrow</span>(Ozone), ]</span></code></pre></div>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Declare our model
+<code>mod</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>mod<span class="ot">&lt;-</span><span class="fu">lm</span>(maxO3<span class="sc">~</span>.,<span class="at">data=</span>train)</span></code></pre></div>
+</div>
+<div id="summary-of-our-model" class="section level2">
+<h2>1.5 Summary of our model</h2>
+<p><span style="color: purple;"><u><strong>a.
+Coeficients</strong></u></span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display a part of
+the <code>summary</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">summary</span>(mod)<span class="sc">%&gt;%</span><span class="fu">coefficients</span>()<span class="sc">%&gt;%</span><span class="fu">kbl</span>()</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+Std. Error
+</th>
+<th style="text-align:right;">
+t value
+</th>
+<th style="text-align:right;">
+Pr(&gt;|t|)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+15.5201746
+</td>
+<td style="text-align:right;">
+17.9611227
+</td>
+<td style="text-align:right;">
+0.8640982
+</td>
+<td style="text-align:right;">
+0.3901835
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T9
+</td>
+<td style="text-align:right;">
+0.6448534
+</td>
+<td style="text-align:right;">
+1.6469657
+</td>
+<td style="text-align:right;">
+0.3915403
+</td>
+<td style="text-align:right;">
+0.6964656
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T12
+</td>
+<td style="text-align:right;">
+1.1271184
+</td>
+<td style="text-align:right;">
+1.8301034
+</td>
+<td style="text-align:right;">
+0.6158769
+</td>
+<td style="text-align:right;">
+0.5397689
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T15
+</td>
+<td style="text-align:right;">
+0.9275465
+</td>
+<td style="text-align:right;">
+1.3525825
+</td>
+<td style="text-align:right;">
+0.6857597
+</td>
+<td style="text-align:right;">
+0.4948979
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ne9
+</td>
+<td style="text-align:right;">
+-2.5156767
+</td>
+<td style="text-align:right;">
+1.1342170
+</td>
+<td style="text-align:right;">
+-2.2179854
+</td>
+<td style="text-align:right;">
+0.0294652
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ne12
+</td>
+<td style="text-align:right;">
+-0.6004321
+</td>
+<td style="text-align:right;">
+1.5784151
+</td>
+<td style="text-align:right;">
+-0.3804019
+</td>
+<td style="text-align:right;">
+0.7046811
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ne15
+</td>
+<td style="text-align:right;">
+0.5810931
+</td>
+<td style="text-align:right;">
+1.2388272
+</td>
+<td style="text-align:right;">
+0.4690671
+</td>
+<td style="text-align:right;">
+0.6403301
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vx9
+</td>
+<td style="text-align:right;">
+1.6202612
+</td>
+<td style="text-align:right;">
+1.2370757
+</td>
+<td style="text-align:right;">
+1.3097510
+</td>
+<td style="text-align:right;">
+0.1941247
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vx12
+</td>
+<td style="text-align:right;">
+-0.1564552
+</td>
+<td style="text-align:right;">
+1.3466815
+</td>
+<td style="text-align:right;">
+-0.1161783
+</td>
+<td style="text-align:right;">
+0.9078098
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vx15
+</td>
+<td style="text-align:right;">
+0.3136639
+</td>
+<td style="text-align:right;">
+1.1130326
+</td>
+<td style="text-align:right;">
+0.2818102
+</td>
+<td style="text-align:right;">
+0.7788354
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+maxO3v
+</td>
+<td style="text-align:right;">
+0.3579600
+</td>
+<td style="text-align:right;">
+0.0731569
+</td>
+<td style="text-align:right;">
+4.8930458
+</td>
+<td style="text-align:right;">
+0.0000052
+</td>
+</tr>
+</tbody>
+</table>
+<p>The output you get from <code>summary(mod)$coefficients</code> in
+<em>R</em> provides a detailed summary of the estimated coefficients in
+your linear regression model.</p>
+<ul>
+<li><p><code>Estimate</code> This column shows the estimated
+coefficients <span class="math inline">\(\widehat\beta_j\)</span> for
+each predictor variable in your model. These coefficients represent the
+expected change in the response variable (<code>maxO3</code> in your
+case) for a one-unit change in the predictor, assuming all other
+predictors are held constant. For example, the estimate for
+<code>T12</code> is <code>2.22115</code>, which means that for each
+additional unit increase in <code>T12</code>, the <code>maxO3</code> is
+expected to increase by <code>2.22115</code> units, assuming all other
+variables are held constant.</p></li>
+<li><p><code>Std. Error</code> <strong>(Standard Error)</strong> This
+column provides the standard error of the estimated coefficients. The
+standard error measures the variability of the coefficient estimate; it
+indicates how much the estimated coefficient would vary if the model
+were fitted to a different sample from the same population. For
+instance, the standard error for <code>T12</code> is
+<code>1.43294</code>, meaning there’s some variability in how precise
+the <code>2.22115</code> estimate is: <span class="math display">\[
+\text{Std.
+Error}[\widehat{\beta_j}]=\sqrt{\text{E}_{{\beta}}[(\widehat{\beta_j}-\beta_j)^2]}=\widehat{\sigma^2}(X^\top
+X)^1_{jj},\ \quad j=1,\cdots 11
+\]</span> As <span class="math inline">\(\widehat{{\beta}}\)</span> is
+unbiased and of variance <span class="math inline">\(\sigma^2(X^\top
+X)^1\)</span>, then <span class="math display">\[
+\text{E}_{{{\beta}}}[(\widehat{\beta_j}-\beta_j)^2]=\text{Var}_{{{\beta}}}[\widehat{\beta_j}]=\sigma^2(
+X^\top X)^1_{jj},\ \quad j=1,\cdots 11
+\]</span></p></li>
+<li><p><code>t value</code> is the value of <span
+class="math inline">\(T:=\frac{\widehat\beta_j-a}{\sqrt{\widehat\sigma^2c^\top(X\top
+X)^{-1}c}}\sim t_{n-p}\)</span> associated to the t-test <span
+class="math display">\[
+\mathscr{H}_0: \, \beta_j=0 \ vs \ \mathscr{H}_1: \,
+\beta_j\not=0,\qquad j\in\{1,\ldots,11\}.
+\]</span> It measures how many standard deviations the coefficient is
+away from zero. A higher absolute t-value indicates that the predictor
+is more strongly associated with the response variable. For example, the
+t-value for <code>maxO3v</code> is <code>5.597</code>, which is quite
+high, indicating a strong relationship between <code>maxO3v</code> and
+<code>maxO3</code>.</p></li>
+<li><p><code>Pr(&gt;|t|)</code> is the <strong>(p-value)</strong>
+associated with the t-test for each coefficient. The p-value indicates
+the probability of observing the data if the null hypothesis (that the
+coefficient is zero, meaning no effect) were true. A small p-value
+(typically less than 0.05) suggests that you can reject the null
+hypothesis, meaning the predictor likely has a significant effect on the
+response variable. For example, the p-value for <code>maxO3v</code> is
+very small (<code>1.88e-07</code>), suggesting that <code>maxO3v</code>
+is a statistically significant predictor of <code>maxO3</code>.</p></li>
+</ul>
+<p><span style="color: purple;"><u><strong>b. Global Fisher
+test</strong></u></span></p>
+<p>Under <span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> , the
+<code>summary</code> displays the Global Fisher test</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>f_stat <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod)<span class="sc">$</span>fstatistic</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fu">pf</span>(f_stat[<span class="dv">1</span>], f_stat[<span class="dv">2</span>], f_stat[<span class="dv">3</span>], <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;F-statistic:&quot;</span>, f_stat[<span class="dv">1</span>], <span class="st">&quot;on&quot;</span>, f_stat[<span class="dv">2</span>], <span class="st">&quot;and&quot;</span>, f_stat[<span class="dv">3</span>], <span class="st">&quot;DF, p-value:&quot;</span>, p_value, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## F-statistic: 23.15506 on 10 and 78 DF, p-value: 1.798482e-19</code></pre>
+<p>The <strong>Global Fisher test</strong> is used to test the utility
+of regressors: <span class="math display">\[\mathscr{H}_0:
+\,Y=\beta_1\textbf{1}_n+\epsilon\ vs \ \mathscr{H}_1:
+\,Y=\beta_1\textbf{1}_n+\sum_{j=2}^{p}\beta_jX_j+\epsilon.
+\]</span> Here, we test under <span
+class="math inline">\(\mathscr{H}_0\)</span> the model reduced to the
+intercept against the full model under <span
+class="math inline">\(\mathscr{H}_1\)</span>. The test statistic is
+<span class="math display">\[
+F:=\frac{\|\overline{Y}\textbf{1}_n-\widehat{Y}\|^2/(p-1)}{\|Y-\widehat{Y}\|^2/(n-p)}\sim\mathscr{F}_{p-1,n-p}
+\]</span> Fisher law at <span class="math inline">\((p-1,n-p)\)</span>
+degrees of freedom. Here <code>F-statistic</code>= 23.1550589 and <span
+class="math inline">\((p-1,n-p)\)</span>= (10,78). Moreover, the
+<code>p-value</code> is very small, then we reject <span
+class="math inline">\(\mathscr{H}_0\)</span>, the model is not resumed
+to the intercept, at least one covariate is useful.</p>
+<p><span style="color: purple;"><u><strong>c. <span
+class="math inline">\(R^2\)</span> and <span
+class="math inline">\(R^2_a\)</span>
+coefficients</strong></u></span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display these 2
+coefficients</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Multiple R-squared:&quot;</span>, <span class="fu">summary</span>(mod)<span class="sc">$</span>r.squared, <span class="st">&quot;, Adjusted R-squared:&quot;</span>, <span class="fu">summary</span>(mod)<span class="sc">$</span>adj.r.squared, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Multiple R-squared: 0.7480218 , Adjusted R-squared: 0.7157169</code></pre>
+<p>where the <strong>determination coefficient <span
+class="math inline">\(R^2\)</span></strong> and the <strong>adjusted
+determination coefficient <span
+class="math inline">\(R^2_a\)</span></strong> are such that <span
+class="math display">\[
+R^2=\frac{\text{MSS}}{\text{TSS}}=\frac{\|\widehat y-\overline y
+\textbf{1}_n\|^2}{\|y-\overline y
+\textbf{1}_n\|^2}=1-\frac{\text{RSS}}{\text{TSS}}\quad\text{and}\quad
+R^2_a=1-\frac{(n-1)\|Y-\widehat Y\|^2}{(n-p)\|Y-\overline
+Y\textbf{1}_n\|^2}=1-\frac{(n-1)\|\widehat{\epsilon}\|^2}{(n-p)\|Y-\overline
+Y\textbf{1}_n\|^2}.
+\]</span></p>
+<p><span style="color: purple;"><u><strong>d. Residual standard
+error</strong></u></span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display the
+reisdual standart error</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Residual standard error:&quot;</span>, <span class="fu">summary</span>(mod)<span class="sc">$</span>sigma, <span class="st">&quot;on&quot;</span>, <span class="fu">summary</span>(mod)<span class="sc">$</span>df[<span class="dv">2</span>], <span class="st">&quot;degrees of freedom</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Residual standard error: 15.72006 on 78 degrees of freedom</code></pre>
+<p>An unbiased estimator of <span
+class="math inline">\(\sigma^2\)</span> is <span
+class="math inline">\(\widehat{\sigma}^2\)</span>:</p>
+<p><span class="math display">\[
+\widehat{\sigma}^2 = \frac{\|Y - X \widehat{\beta} \|^2}{n-p} =
+\frac{\|\widehat{\epsilon} \|^2}{n-p}.\quad \text{such
+that}\quad\frac{(n-r)\widehat\sigma^2}{\sigma^2} \sim \chi^2_{n-p}
+\]</span> Here 15.7200618 is the value of unbiased estimator <span
+class="math inline">\(\widehat\sigma\)</span> and 78
+<code>degrees of freedom</code> is the degrees of freedom of the <span
+class="math inline">\(\chi^2_{n-p}\)</span> law.</p>
+<p><span style="color: purple;"><u><strong>e. Estimated
+residuals</strong></u></span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display the full
+<code>summary</code></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ ., data = train)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -52.549  -9.834  -0.017   7.327  40.358 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 15.52017   17.96112   0.864   0.3902    
+## T9           0.64485    1.64697   0.392   0.6965    
+## T12          1.12712    1.83010   0.616   0.5398    
+## T15          0.92755    1.35258   0.686   0.4949    
+## Ne9         -2.51568    1.13422  -2.218   0.0295 *  
+## Ne12        -0.60043    1.57842  -0.380   0.7047    
+## Ne15         0.58109    1.23883   0.469   0.6403    
+## Vx9          1.62026    1.23708   1.310   0.1941    
+## Vx12        -0.15646    1.34668  -0.116   0.9078    
+## Vx15         0.31366    1.11303   0.282   0.7788    
+## maxO3v       0.35796    0.07316   4.893 5.23e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 15.72 on 78 degrees of freedom
+## Multiple R-squared:  0.748,  Adjusted R-squared:  0.7157 
+## F-statistic: 23.16 on 10 and 78 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Here <code>Residuals</code> or <strong>estimated residuals)</strong>
+are defined as follows: <span class="math display">\[
+\widehat{\epsilon}=Y-\widehat{Y}=(\mathbf{I}_n-P_X)Y=P_{X^\perp}Y=P_{X^\perp}\epsilon
+\]</span> where <span class="math inline">\(\widehat{Y}\)</span> is
+called the <strong>fitted value</strong> <span class="math display">\[
+\widehat{Y}=X\widehat{\beta}=X(X^\top X)^{-1}X^\top Y=P_X\,Y
+\]</span></p>
+</div>
+</div>
+<div id="model-validation" class="section level1">
+<h1>2. Model validation</h1>
+<div id="overview-of-residuals" class="section level2">
+<h2>2.1. Overview of Residuals</h2>
+<p>It is important to check that these assumptions are verified on our
+data, which means validating the 4 assumptions. Since we do not have
+access to the theoretical residuals <span
+class="math inline">\(\epsilon=(\epsilon_1,\ldots,\epsilon_n)^\top\)</span>,
+we will validate the assumptions based on the <strong>estimated
+residuals</strong> <span class="math display">\[
+\widehat{\epsilon}=Y-\widehat{Y}=(\mathbf{I}_n-P_X)Y=P_{X^\perp}Y\sim\mathscr{N}(\boldsymbol{0}_n,\sigma^2P_{X^\perp})
+\]</span></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display the
+`summary of the residuals</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">residuals</span>(mod))</span></code></pre></div>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -52.5489  -9.8341  -0.0173   0.0000   7.3266  40.3580</code></pre>
+<p><span class="solution">✍</span> Let denote by <span
+class="math inline">\(h_{ij}\)</span> the element of the projector <span
+class="math inline">\(P_X\)</span>, such that <span
+class="math display">\[
+P_X=\big[h_{ij}\big]_{1\leq i\leq n\\ 1\leq j\leq n}\quad
+\text{and}\quad
+P_{X^\perp}=\mathbf{I}_n-P_X=\big[\mathbb{1}_{i=j}-h_{ij}\big]_{1\leq
+i\leq n\\ 1\leq j\leq n}
+\]</span></p>
+<p><span class="solution">📝</span> If <strong>[P1]</strong> is
+statisfied by <span
+class="math inline">\(\epsilon=(\epsilon_1,\ldots,\epsilon_n)^\top\,\)</span>,
+(<em>i.e</em> <span
+class="math inline">\(\text{E}_\beta[\epsilon_i]=0\)</span>), the
+<strong>estimated residuals</strong> also satisfy <span
+class="math inline">\(\text{E}_\beta[\widehat{\epsilon_i}]=0\)</span>.</p>
+<p><span class="solution">📝</span> If <strong>[P2]</strong>
+(homoscedasticity) is statisfied by <span
+class="math inline">\(\epsilon=(\epsilon_1,\ldots,\epsilon_n)^\top\,\)</span>,
+(<span
+class="math inline">\(\text{V}_\beta[\epsilon_i]=\sigma^2\)</span>), the
+estimated resisuals do not satisfied this condition: : <span
+class="math inline">\(\text{V}_\beta[\epsilon_i]=\sigma^2(1-h_{ii})\)</span>.
+To address this, we consider the <strong>standardized
+residuals</strong>, which are homoskedastic.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Standardized residuals]</strong>
+</span> Consider the linear model <span
+class="math inline">\(Y=X\beta+\epsilon\)</span>. Assume the full rank
+and <strong>[P1–P4]</strong> assumptions satisfied. We define the
+<strong>standardized residuals</strong> <span
+class="math inline">\(\widehat r=(\widehat r_1,\cdots,\widehat
+r_n)^T\)</span> such that <span class="math display">\[
+\widehat r_i=\frac{\widehat\epsilon_i}{\widehat\sigma\sqrt{1-h_{ii}}} \
+\text{with} \ \widehat{\sigma}^2=\frac{\|Y-X\widehat{\beta}
+\|^2}{n-\text{rank}(X)}
+\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display the
+`summary of the standardized residuals.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rstandard</span>(mod))</span></code></pre></div>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## -3.653826 -0.642356 -0.001196 -0.006352  0.491494  2.796977</code></pre>
+<p><span class="solution">📝</span> If <strong>[P3]</strong>
+(uncorrelation) is statisfied by <span
+class="math inline">\(\epsilon=(\epsilon_1,\ldots,\epsilon_n)^\top\,\)</span>,
+(<span
+class="math inline">\(\text{Cov}_\beta[\epsilon_i,\epsilon_j]=\sigma^2\)</span>),
+neither the <em>estimated residuals</em> nor the <em>standardized
+residuals</em> satisfy this condition. To address this, we consider the
+<strong>studentized residuals</strong>, which satisfy
+<strong>[P3]</strong> .</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Studentized residuals]</strong>
+</span> Consider the linear model <span
+class="math inline">\(Y=X\beta+\epsilon\)</span>. Assume the full rank
+and <strong>[P1–P4]</strong> assumptions satisfied. We define the
+<strong>studentized residuals</strong> <span
+class="math inline">\(t^*=(t_1^*,\cdots,t_n^*)^T\)</span> such that</p>
+<p><span class="math display">\[
+t^*_i=\frac{\widehat\epsilon_i}{\widehat\sigma_{(-i)}\sqrt{1-h_{ii}}},
+\]</span> where <span
+class="math inline">\(\widehat\sigma^2_{(-i)}\)</span> is the estimation
+of <span class="math inline">\(\sigma^2\)</span> in the model deprived
+of the observation <span class="math inline">\(i\)</span> (by <em>cross
+validation</em>): <span class="math display">\[
+\widehat\sigma^2_{(-i)}=\frac{\|Y_{(-i)}-X_{(-i)}\widehat \beta_{(-i)}
+\|^2}{(n-1)-\text{rank}(X)}
+\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Display the
+`summary of the studentized residuals.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rstudent</span>(mod))</span></code></pre></div>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+## -3.987590 -0.639920 -0.001188 -0.006015  0.489092  2.929794</code></pre>
+<p><span class="solution">📝</span> If <strong>[P4]</strong> (Gaussian)
+is statisfied by <span
+class="math inline">\(\epsilon=(\epsilon_1,\ldots,\epsilon_n)^\top\,\)</span>,
+the <strong>standardized/studentized residuals</strong> do not satisfied
+this condition.</p>
+<br>
+<div class="brdblack">
+<p><span style="color: red;"><strong>[Theorem 1]</strong> </span>
+Consider the linear model <span
+class="math inline">\(Y=X\beta+\epsilon\)</span>. Assume the full rank
+and <strong>[P1–P4]</strong> assumptions satisfied, then, the
+studentized residuals satisfy <span class="math display">\[
+t_i^*=\frac{\widehat\epsilon_i}{\widehat\sigma_{(-i)}\sqrt{1-h_{ii}}}\sim
+t_{(n-1)-\text{rank}(X)},
+\]</span> where <span
+class="math inline">\(t_{n-1-\text{rank}(X)}\)</span> denotes the
+student law of <span
+class="math inline">\(\Big((n-1)-\text{rank}(X)\Big)\)</span> degrees of
+freedom.</p>
+</div>
+<p><span style="color: blue;"> <strong><em>Proof.</em></strong> </span>
+Let this be an exercise for you to do on your own.<span
+class="math inline">\(\square\)</span></p>
+</div>
+<div id="practical-model-validation" class="section level2">
+<h2>2.2. Practical model validation</h2>
+<p>We do not have access to the theoretical residuals. We can however
+validate the assumptions thanks to graphical/tests tools on the
+estimated residuals.</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Declare our
+linear model and display 3 relevant plots are given by the command
+<code>plot(mod)</code> or <code>autoplot(mod,)</code>in
+<code>library(ggfortify)</code></p>
+<p><span style="color: blue;"> <u><strong>[P1]</strong> <strong>The
+<span class="math inline">\(\epsilon_i\)</span> are
+centered.</strong></u>. </span></p>
+<p>Notice that by construction, the <span
+class="math inline">\(\widehat\epsilon_i\)</span> have mean 0, so
+assumption <strong>[P1]</strong> cannot be contradicted by the estimated
+residuals. We can however observe the plot of estimated residuals <span
+class="math inline">\(\widehat\epsilon\in[X]^\perp\)</span> against the
+fitted values <span class="math inline">\(\widehat Y\in[X]\)</span>. If
+the 4 assumptions are verified then these two vectors are independent.
+Therefore, if we observe, in <span style="color: purple;">
+<strong>Residuals vs Fitted plot</strong></span>:</p>
+<ul>
+<li>A scatter plot which is centred, aligned around 0, and without any
+particular structure, then we are satisfied. In other words, if the blue
+line is approximately horizontal and close to 0 (on the scale!) and if
+the residuals are generally uniformly distributed around this line, then
+<strong>[P1]</strong> is validated.</li>
+<li>On the other hand, if we observe some sort of structure (for
+example: the residuals increase when the predicted values increase),
+then we have reason to believe that the model does not fit the data.
+There are several possible solutions: work with the log of observations,
+work with the log of the covariates…</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">autoplot</span>(mod,<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><span style="font-size: 30 px;">📈</span> Here, <strong>[P1]</strong>
+is validated.</p>
+<p><span style="color: blue;"> <u><strong>[P2]</strong> <strong>The
+<span class="math inline">\(\epsilon_i\)</span> are
+homoskedastic.</strong></u>. </span></p>
+<p>To check that the residuals are homoskedastic (identical variance),
+observe the plot of <em>standardized residuals</em> <span
+class="math inline">\(\widehat r\in[X]^\perp\)</span> against the fitted
+values <span class="math inline">\(\widehat Y\in[X]\)</span>. If we
+observe, in <span style="color: purple;"> <strong>Scale-Location
+plot</strong></span>:</p>
+<ul>
+<li><p>A scatter plot which is centred, aligned around 1, and without
+any structure, then we are satisfied. In other words, if the blue line
+is approximately horizontal and close to 1 (on the scale!) and if the
+residuals are generally uniformly distributed around this line, then
+<strong>[P2]</strong> is validated.</p></li>
+<li><p>On the other hand, if we observe some sort of structure, we have
+reason to believe that the model is not homoskedastic.</p></li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">autoplot</span>(mod,<span class="dv">3</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><span class="solution">💡</span> If it is challenging to validate
+this hypothesis graphically, we also have the
+<strong>Breusch-Pagan</strong> test available to make a decision.</p>
+<p><span class="math display">\[\mathscr{H}_0: \,\text{&quot;Errors are
+homoscedastic&quot;} \ vs \ \mathscr{H}_1: \,\text{&quot;Errors are
+heteroscedastic&quot;}
+\]</span></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">ncvTest</span>(mod)</span></code></pre></div>
+<pre><code>## Non-constant Variance Score Test 
+## Variance formula: ~ fitted.values 
+## Chisquare = 2.970944, Df = 1, p = 0.084772</code></pre>
+<p><span style="font-size: 30 px;">📈</span> Here, <strong>[P2]</strong>
+is validated both graphically and by the test at the 5% significance
+level, with a <span class="math inline">\(p\)</span>-value greater
+smaller 5%.</p>
+<p><span style="color: blue;"> <u><strong>[P3]</strong> <strong>The
+<span class="math inline">\(\epsilon_i\)</span> are
+uncorrelated.</strong></u>. </span></p>
+<p>To satisfy hypothesis <strong>[P3]</strong>, it should be that <span
+class="math display">\[
+\text{Cov}(\epsilon_t, \epsilon_{t-s}) = 0, \ \forall t, \ \forall s
+\neq 0
+\]</span> which, in the context of the Gaussian linear model, translates
+to the independence of residuals. <strong>Although this independence can
+only be guaranteed by experimental design, we can perform tests to check
+for autocorrelation in the residuals.</strong> Consider here, the
+Durbin-Watson, Breusch-Godfrey and Ljung-Box Tests.</p>
+<p><br></p>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Autocorrelation of order <span
+class="math inline">\(k\)</span>]</strong> :</span> <span
+class="math display">\[
+\rho_k = \frac{\text{Cov}(\epsilon_t,
+\epsilon_{t-k})}{\sqrt{\text{Var}(\epsilon_t) \cdot
+\text{Var}(\epsilon_{t-k})}}
+\]</span> where <span class="math inline">\(\epsilon=(\epsilon_1,
+\ldots, \epsilon_n)^\top\)</span> denotes the residuals.</p>
+</div>
+<p><br></p>
+<p><span style="color: purple;"><strong>Durbin-Watson
+Test</strong></span> (<span class="math inline">\(H_0 : \rho_1 =
+0\)</span>): Primarily used to detect <strong>first-order
+autocorrelation</strong>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">durbinWatsonTest</span>(mod)</span></code></pre></div>
+<pre><code>##  lag Autocorrelation D-W Statistic p-value
+##    1      0.04519213      1.905021   0.562
+##  Alternative hypothesis: rho != 0</code></pre>
+<p><span style="font-size: 30 px;">📈</span> Here, <strong>[P3]</strong>
+may be validated at the 5% significance level, with a <span
+class="math inline">\(p\)</span>-value greater than 5%.</p>
+<p><span style="color: purple;"><strong>Breusch-Godfrey
+Test</strong></span> (<span class="math inline">\(H_0 : \rho_1 = \rho_2
+= \dots = \rho_q = 0\)</span>) is preferable when higher-order
+autocorrelation is suspected as it can test for <strong>higher-order
+autocorrelation</strong>. This test is based on regressing residuals on
+their own lagged values up to order <span
+class="math inline">\(q\)</span>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a><span class="co"># Breusch-Godfrey test</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="fu">bgtest</span>(mod, <span class="at">order =</span> <span class="dv">3</span>) </span></code></pre></div>
+<pre><code>## 
+##  Breusch-Godfrey test for serial correlation of order up to 3
+## 
+## data:  mod
+## LM test = 2.7327, df = 3, p-value = 0.4347</code></pre>
+<p><span style="font-size: 30 px;">📈</span> Here, <strong>[P3]</strong>
+may be validated at the 5% significance level, with a <span
+class="math inline">\(p\)</span>-value greater than 5%.</p>
+<p><span style="color: purple;"><strong>Ljung-Box Test</strong> </span>
+(<span class="math inline">\(H_0 : \rho_1 = \rho_2 = \dots = \rho_q =
+0\)</span>) is used to test for the absence of autocorrelations across
+multiple orders simultaneously, especially in <strong>time series
+contexts</strong>. It provides a <strong>global test</strong> for the
+absence of autocorrelations up to order <span
+class="math inline">\(q\)</span>, aggregating autocorrelations to
+provide a comprehensive measure.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># Ljung-Box test</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">Box.test</span>(<span class="fu">residuals</span>(mod), <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>, <span class="at">lag =</span> <span class="dv">3</span>) </span></code></pre></div>
+<pre><code>## 
+##  Box-Ljung test
+## 
+## data:  residuals(mod)
+## X-squared = 1.8005, df = 3, p-value = 0.6148</code></pre>
+<p><span style="font-size: 30 px;">📈</span> Here, <strong>[P3]</strong>
+may be validated at the 5% significance level, with a <span
+class="math inline">\(p\)</span>-value greater than 5%.</p>
+<br>
+<div class="brdred">
+<p><span class="solution">💡</span> <span
+style="color: purple;"><strong>Choice of <span
+class="math inline">\(q\)</span>.</strong> </span></p>
+<p>In practice, the choice of <span class="math inline">\(q\)</span>
+should balance detecting relevant autocorrelations and model
+complexity:</p>
+<ul>
+<li>A <span class="math inline">\(q\)</span> that is too small may miss
+important higher-order autocorrelations.</li>
+<li>A <span class="math inline">\(q\)</span> that is too large may lead
+to erroneous conclusions due to multiple testing effects.</li>
+</ul>
+</div>
+<p><br></p>
+<p><span style="color: blue;"> <u><strong>[P4]</strong> <strong>The
+<span class="math inline">\(\epsilon_i\)</span> are
+Gaussian.</strong></u>. </span></p>
+<p>The <span style="color: purple;"><strong>Normal Q-Q
+plot</strong></span> is a way of validating that the residuals are
+normally distributed (<em>i.e.</em> the plot of the quantiles of the
+estimated residuals against the quantiles of a theoretical normal
+distribution).</p>
+<ul>
+<li>If the points fall approximately along a straight line (<span
+class="math inline">\(y = x\)</span>), then the data are approximately
+normally distributed. Deviations from this line indicate deviations from
+normality.</li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">autoplot</span>(mod,<span class="dv">2</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><span class="solution">💡</span> We also have the
+<strong>Shapiro</strong> test available to make a decision. <span
+class="math display">\[\mathscr{H}_0: \,\text{&quot;Errors are normally
+distributed&quot;} \ vs \ \mathscr{H}_1: \,\text{&quot;Errors are not
+normally distributed&quot;}
+\]</span></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(mod))</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(mod)
+## W = 0.96674, p-value = 0.02205</code></pre>
+<p><span style="font-size: 30 px;">📈</span> Here, <strong>[P4]</strong>
+is validated both graphically and not by the test at the 5% significance
+level, with a <span class="math inline">\(p\)</span>-value smaller than
+5%</p>
+<p><span class="solution">📝</span> Note however that assumption
+<strong>[P4]</strong> can be relaxed: if the number of observations
+<span class="math inline">\(n\)</span> is large, we can use asymptotic
+properties of the estimators and tests.</p>
+</div>
+</div>
+<div id="generalization" class="section level1">
+<h1>3. Generalization</h1>
+<div id="generalization-performance" class="section level2">
+<h2>3.1. Generalization performance</h2>
+<p>Given a training sample <span
+class="math inline">\((x_i,Y_i)_{i=1}^n\)</span>, we want to predict
+futur value of <span class="math inline">\(Y\)</span>.</p>
+<ul>
+<li>Set a family of model <span
+class="math inline">\(\mathscr{F}\)</span>. Here <span
+class="math inline">\(\mathscr{F}=\{x^\top\beta,\beta\in\mathbb{R}^p\}\)</span>.<br></li>
+<li>Pick <span class="math inline">\(\widehat f\in\mathscr{F}\)</span>
+based on the training set. Here <span class="math inline">\(\widehat
+f(x)=\widehat y=x^\top\widehat\beta\)</span> where <span
+class="math inline">\(\widehat\beta=(X^\top X)^{-1}X^\top Y\)</span>,
+where <span class="math inline">\(X\)</span> denotes the <em>design</em>
+matrix.<br></li>
+<li>Asses the accuracy of the model <span class="math inline">\(\widehat
+f\)</span> on the new observations (test sample)</li>
+</ul>
+<p><span class="attention">⚠️</span> When modeling, it is essential to
+find the right balance between a model that is too simplistic, which
+fails to capture all the nuances in the data (<em>underfitting</em>),
+and a model that is too complex, which fits the training data too
+precisely but loses generality on new data (<em>overfitting</em>).
+Striking this balance ensures that the model <strong>generalizes well to
+unseen data</strong>, thus ensuring robust performance.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Generalization
+property]</strong> </span> A good model should predict futur value
+correctly. Let <span class="math inline">\((X,Y)\)</span> <span
+class="math inline">\(\mathbb{R}^{p}\times\mathbb{R}\)</span>-random
+vecteur, we define the generalization risk <span
+class="math display">\[R(\widehat f)=\text{E}\|Y-\widehat
+f(X)\|^2=\sigma^2+bias^2(\widehat f)+ \text{Tr}(\text{Var}(\widehat f))
+\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> Here <span
+class="math inline">\(R(\widehat f)=\text{E}\|Y-\widehat
+f(X)\|^2=\sigma^2+bias^2(\widehat f)+ \sigma^2p\)</span></p>
+<p><span class="solution">📝</span> The risk is <strong>not directly
+computable</strong> since the law <span
+class="math inline">\((X,Y)\)</span> is unknown.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Empirical risk]</strong>
+</span></p>
+<p>For <span class="math inline">\(\widehat f\)</span>, we can estimate
+<span class="math inline">\(R(\widehat f)\)</span> from a <strong>Test
+sample</strong> <span
+class="math inline">\((X_t,Y_t)_{t=1,\cdots,T}\)</span></p>
+<p><span class="math display">\[\widehat R(\widehat f)=\frac
+1T\sum_{t=1}^T\left(Y_t-\widehat f(X_t)\right)^2\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution">📌</span> The graph illustrates the evolution
+of the model’s performance as a function of its complexity, showing how
+performance on both the training set (<em>Train</em>) and the test set
+(<em>Test</em>) changes as the model complexity increases. Typically,
+the <strong>goal is to find a balance where the model fits the training
+data well without compromising its ability to generalize to new, unseen
+data</strong>. This balance is crucial for avoiding underfitting or
+overfitting, thereby ensuring optimal model performance.</p>
+<p><img src="ImageLecture1/biais_variance1.png" style="display: block; margin: auto;" /></p>
+<br>
+<div class="brdred">
+<p><span class="solution">🤔</span> When does it make sense to
+<strong>use a low variance biased estimator</strong> ?</p>
+</div>
+<p><br></p>
+<p>To illustrate it, let us consider the following example. We assume
+the model <span class="math display">\[
+Y=\beta_1X_1+\beta_2X_2+\epsilon=X\beta+\epsilon, \quad (M1)
+\]</span> where - <span class="math inline">\(X=[X_1\,\,X_2]\)</span> is
+a <span class="math inline">\(n\times 2\)</span> matrix of rank 2 -
+<span class="math inline">\(\beta=(\beta_1,\beta_2)^\top
+\in\mathbb{R}^2\)</span> <span class="math inline">\(s.t.\)</span> <span
+class="math inline">\(\beta_2\not=0\)</span>. - Let <span
+class="math inline">\(\widehat\beta=(X^\top X)^{-1}X^\top Y\)</span>,
+the OLSE calculate from the model <span
+class="math inline">\((M1)\)</span>, an unbiased estimator.</p>
+<p><strong>Is the variable <span class="math inline">\(X_2\)</span>
+useful ?</strong> Let us study the case <span
+class="math inline">\(\beta_2=0\)</span> (even if it is false), and look
+for when to omit an explanatory variable can be advantageous in terms of
+risk. Let define the following model <span class="math display">\[
+Y=X_1\beta_1+\epsilon
+\]</span> and the associated OLSE estimator <span
+class="math inline">\(\widetilde\beta_1=(X_1^\top
+X_1)^{-1}X_1^\top  Y\)</span> of <span
+class="math inline">\(\beta_1\)</span> where <strong><span
+class="math inline">\(Y\)</span> is defined by the model <span
+class="math inline">\((M1)\)</span></strong>. Then, <span
+class="math inline">\(\widetilde\beta=(\widetilde\beta_1,0)^\top\)</span>
+is a biased estimator.</p>
+<br>
+<div class="brdblack">
+<p><span style="color: orange;"><strong>[Proposition 1]</strong> </span>
+In the previous context, <span
+class="math inline">\(\forall\beta\in\mathbb{R}^2\)</span> <span
+class="math display">\[\text{E}[\|\hat\beta-\beta\|^2]-\text{E}[\|\widetilde\beta-\beta\|^2]\geq
+\sigma^2\frac{\|X_1\|^2}{D}-\beta_2^2\left(1+\frac{(X_1^\top
+X_2)^2}{\|X_1\|^4} \right ),\]</span> where <span
+class="math inline">\(D\)</span> denote the determinant of the matrix
+<span class="math inline">\((X^\top X)\)</span>.</p>
+</div>
+<p><br> <span style="color: blue;"> <strong><em>Proof.</em></strong>
+</span></p>
+<p>We easily prove that <span class="math display">\[(X^\top
+X)^{-1}=\frac{1}{D}\begin{pmatrix}
+   \|X_2\|^2 &amp; -X_1^\top X_2 \\
+   -X_1^\top X_2 &amp;\|X_1\|^2
+\end{pmatrix},
+\ \text{ where } : D:=\|X_1\|^2\|X_2\|^2-(X_1^\top X_2)^2&gt;0.
+\]</span> Moreover, the estimator <span
+class="math inline">\(\widehat\beta\)</span> is unbiased, it comes <span
+class="math display">\[
+\text{E}[\|\widehat\beta-\beta\|^2]=\sum_{j=1}^2\text{Var}(\widehat\beta_j)
+=\sigma^2\text{Tr}((X^\top X)^{-1}))= \frac{\sigma^2}{D}\left
+(\|X_2\|^2+\|X_1\|^2\right).
+\]</span> For the estimator <span
+class="math inline">\(\widetilde\beta=(\widetilde\beta_1,0)^\top\)</span>,
+we have <span class="math display">\[\begin{eqnarray*}
+\text{E}[\|\widetilde\beta-\beta\|^2]&amp;=&amp;\text{E}[(\widetilde\beta_1-\beta_1)^2]+\beta_2^2=\text{E}[((X_1^\top
+X_1)^{-1}X_1^\top  Y-\beta_1)^2]+\beta_2^2\\
+&amp;=&amp;\text{E}[((X_1^\top X_1)^{-1}X_1^\top  (
+\beta_1X_1+\beta_2X_2+\epsilon )\beta_1)^2]+\beta_2^2\\
+&amp;= &amp;\left((X_1^\top X_1)^{-1}X_1^\top X_2\right)^2
+\beta_2^2+\sigma^2(X_1^\top X_1)^{-1}+\beta_2^2\\
+&amp;=&amp;\frac{\sigma^2}{\|X_1\|^2}+ \beta_2^2\left(1+\frac{(X_1^\top
+X_2)^2}{\|X_1\|^4}\right).
+\end{eqnarray*}\]</span></p>
+<p>For <span class="math inline">\(D&gt;0\)</span>, it comes that <span
+class="math inline">\(D&lt;\|X_1\|^2\|X_2\|^2\)</span>. Therefore, we
+get <span class="math display">\[\begin{eqnarray*}
+\text{E}[\|\widehat\beta-\beta\|^2]-\text{E}[\|\widetilde\beta-\beta\|^2]
+&amp;=&amp;\frac{\sigma^2}{D}\left
+(\|X_2\|^2+\|X_1\|^2\right)-\frac{\sigma^2}{\|X_1\|^2}-
+\beta_2^2\left(1+\frac{(X_1^\top X_2)^2}{\|X_1\|^4}\right)\\
+&amp;&gt; &amp;
+\frac{\sigma^2\|X_1\|^2}{D}-\beta_2^2\left(1+\frac{(X_1^\top
+X_2)^2}{\|X_1\|^4}\right).\quad\square
+\end{eqnarray*}\]</span><span class="math inline">\(\square\)</span></p>
+<p><span class="solution">📝</span> This result does not contradict the
+Gauss-Markov theorem, because <span
+class="math inline">\(\widetilde\beta\)</span> is biased.<br> <span
+class="solution">📝</span> By introducing (for <span
+class="math inline">\(\beta_2\neq 0\)</span> and small enough) a
+slightly biased estimator with a lower variance, the quadratic risk is
+improved. For estimation (and therefore prediction), it is important to
+avoid models that are too complex.</p>
+</div>
+<div id="impacts-of-high-correlation-between-variables"
+class="section level2">
+<h2>3.2. Impacts of high correlation between variables</h2>
+<p>Let define <span class="math inline">\(G=\frac 1n X^\top X\)</span>,
+the Gram matrix. Consider the following regression linear model <span
+class="math inline">\(Y=X\beta+\epsilon\)</span>, such that <span
+class="math inline">\(\epsilon\sim\mathscr{N}(\boldsymbol{0}_n,\sigma^2\mathbf{I}_n)\)</span>.
+By Gauss-Markov theorem, the OLSE is the best <strong>linear
+unbiased</strong> estimator such that <span
+class="math display">\[\text{Var}(\widehat \beta)=\sigma^2 (X^\top
+X)^{-1}=\sigma^2\frac{G^{-1}}{n}.
+\]</span> <span class="math display">\[
+Y=X\beta+\epsilon, \
+\epsilon\sim\mathscr{N}(\boldsymbol{0}_n,\sigma^2\mathbf{I}_n)
+\]</span></p>
+<br>
+<div class="brdred">
+<p><span class="attention">⚠️</span> Estimating <span
+class="math inline">\(\beta\)</span> is an inverse problem whose
+difficulty is measured by the condition number depending on the
+eigenvalues of <span class="math inline">\(G\)</span> : <span
+class="math display">\[\frac{\lambda_{\max}(G)}{\lambda_{\min}(G)}:=\kappa(G)&gt;0
+\]</span></p>
+<ul>
+<li><p>If <span class="math inline">\(\kappa(G)\)</span> is small :
+<span class="math inline">\(G\)</span> is well-conditioned. This
+guarantees a good performance of the OLSE.</p></li>
+<li><p>If <span class="math inline">\(\kappa(G)\)</span> is large :
+<span class="math inline">\(G\)</span> is said to be ill-conditioned and
+the OLSE performs poorly.</p>
+<ul>
+<li><strong>Strongly correlated covariates implies that <span
+class="math inline">\(G\)</span> is ill-conditioned and we may need to
+use other estimators than OLSE.</strong></li>
+<li>Large <span class="math inline">\(p\)</span> increases complexity of
+the model but may cause numerical instability and/or overfitting.</li>
+</ul></li>
+</ul>
+</div>
+<p><br></p>
+<p><span style="color: blue;"><u><strong>Multicollinearity
+Issues</strong></u></span> The numerical variables in your model are
+highly correlated, which can lead to several issues:</p>
+<p><span class="solution">📝</span> <strong>Sensitivity to Small Changes
+in the Data</strong> When independent variables are highly correlated,
+it means they contain almost the same information. The model struggles
+to distinguish the effect of each variable individually because they
+<em>“move”</em> together. Consequently, if the data change slightly
+(even a small sample or a minor modification of values), the estimates
+of the variable coefficients can change disproportionately.<br> <span
+class="solution">📝</span> <strong>Extremely Large Coefficients</strong>
+Since the model has difficulty attributing a unique contribution to each
+correlated variable, it compensates by assigning very high coefficients
+to some of them to adjust the relationship with the dependent variable.
+These high coefficients do not necessarily reflect a true relationship
+between the variables and make the model less robust and reliable.<br>
+<span class="solution">📝</span> <strong>Reversed Signs of
+Coefficients</strong> Sometimes, the model’s sensitivity to data leads
+to situations where a coefficient, which should normally be positive or
+negative according to the expected relationship with the dependent
+variable, changes sign. This happens because the correlated variables
+<em>“compete”</em> to explain the same portion of variance in the
+dependent variable, resulting in unreliable (<em>peu/pas fiable</em>)
+estimates.<br> <span class="solution">📝</span> <strong>Impact on
+Interpretation</strong> With very large or reversed-sign coefficients,
+it becomes difficult to understand which variable actually affects the
+dependent variable and in which direction. This complicates the
+interpretation and decision-making based on the model.<br> <span
+class="solution">📝</span> <strong>Increase in Standard Errors and High
+p-values</strong> Multicollinearity increases the standard errors of the
+estimated coefficients. The standard error measures the precision with
+which a coefficient is estimated. When this error is high, it means the
+model has greater uncertainty about the true value of the coefficient.
+Consequently, the <em>p</em>-values associated with the significance
+tests of the coefficients increase because the precision of the
+estimates decreases. This distorts statistical tests, making some
+coefficients statistically insignificant (due to higher p-values), even
+if these variables have a real effect on the dependent variable. In
+other words, multicollinearity can mask the true importance of variables
+in the model.<br></p>
+<p><strong>In Summary, multicollinearity makes coefficient estimation
+unstable because the model cannot properly allocate contributions
+between variables that contain redundant information, leading to extreme
+or inconsistent results.</strong></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> In our
+<code>Ozone</code> example, the regressors are strongly correlated!
+Display the correlation plot.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>correlation_matrix<span class="ot">&lt;-</span><span class="fu">cor</span>(Ozone)</span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="fu">corrplot</span>(correlation_matrix, <span class="at">order =</span> <span class="st">&#39;hclust&#39;</span>,<span class="at">addrect =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="brdblack">
+<p><span style="color: #B22222;"><strong>Interpretation</strong>
+</span></p>
+<p>The <code>corrplot</code> function from the <code>corrplot</code>
+library provides a <strong>visual representation of the correlation
+matrix</strong> for numeric variables only. Each cell in the plot
+represents the correlation between a pair of variables.</p>
+<p><strong>Shape interpretation</strong> In <code>corrplot</code>,
+<strong>smaller circles</strong> indicate strong correlations (closer to
+1 or -1), and <strong>larger circles</strong> indicate weak or no
+correlation (closer to 0).</p>
+<p><strong>Color interpretation</strong></p>
+<ul>
+<li><strong>Darker blue</strong> = strong positive correlation,
+<br></li>
+<li><strong>Darker red</strong> = strong negative correlation, <br></li>
+<li><strong>Lighter colors</strong> (blue or red) = weak or no
+correlation.</li>
+</ul>
+<p><strong>Rectangles (Clustering)</strong></p>
+<ul>
+<li>The argument <code>addrect = 3</code> means you are adding <strong>3
+rectangles</strong> around clusters of variables that have similar
+correlation patterns. This is useful for visualizing groups of variables
+that tend to correlate with each other. <br></li>
+<li>The <code>order = 'hclust'</code> argument uses <strong>hierarchical
+clustering</strong> to order the variables, making it easier to identify
+blocks of variables with similar correlation patterns.</li>
+</ul>
+</div>
+<p><br></p>
+<p><strong>For further exploration.</strong> If you want to explore
+pairwise relationships beyond correlations (e.g., for both numeric and
+categorical variables), the <code>ggpairs()</code> function from the
+<code>GGally</code> package can provide scatter plots, correlations,
+density plots and more detailed pairwise visualization</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="fu">ggpairs</span>(Ozone)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="criteria" class="section level1">
+<h1>4. Criteria</h1>
+<p>Selecting a set of exploratory variables for a model can be
+relatively straightforward when comparing two specific models. For this,
+we need to evaluate them using criteria.</p>
+<br>
+<div class="brdblack">
+<p>We will focus on the following criteria:</p>
+<ul>
+<li>Tests between nested models</li>
+<li><span class="math inline">\(R^2\)</span> and adjusted <span
+class="math inline">\(R^2_a\)</span></li>
+<li>Mallows’ <span class="math inline">\(C_p\)</span></li>
+<li>AIC (Akaike Information Criterion)</li>
+<li>BIC (Bayesian Information Criterion)</li>
+</ul>
+</div>
+<p><br></p>
+<p>Nevertheless, the process becomes more complex when choosing among
+multiple models.</p>
+<ul>
+<li><strong>No Natural Order Among Variables.</strong> There is no
+inherent ranking or natural order among the variables, making the
+selection process less intuitive.<br></li>
+<li><strong>Numerous Possible Models.</strong> The number of potential
+models can be substantial. For example, with 8 potential variables
+(excluding the intercept, which is always included), the number of
+possible models is given by the formula <span
+class="math inline">\(\sum_{j=0}^8 C_j^8 = 2^8 = 256\)</span> models to
+consider.</li>
+</ul>
+<p>In the next section, we will introduce a step-by-step method to
+address this problem.</p>
+<p><span style="color: blue;"><u><strong>Notations and Illustrative
+Example</strong></u></span></p>
+<ul>
+<li><p>Let <span class="math inline">\(p=q+1\)</span> be the number of
+explanatory variables, including the intercept <span
+class="math inline">\(\mathbf{1}_n\)</span>: <span
+class="math inline">\(X = (\mathbf{1}_n, X_1, \ldots, X_q)\)</span>.
+Consider the framework of linear regression models: <span
+class="math display">\[
+Y = X\beta + \epsilon, \quad \text{rank}(X) = p, \quad \epsilon \sim
+\mathscr{N}(\boldsymbol{0}_n, \sigma^2 \mathbf{I}_n).
+\]</span></p></li>
+<li><p>Denote <span class="math inline">\([m]\)</span> as any model of
+size <span class="math inline">\(m\)</span>, where <span
+class="math inline">\(m = \text{card}([m])\)</span>. For any model <span
+class="math inline">\([m]\)</span>, define: <span
+class="math display">\[
+\text{RSS}(m) = \|Y - P_m Y\|^2,
+\]</span> where <span class="math inline">\(P_m\)</span> is the
+projection matrix onto the space spanned by the variables in model <span
+class="math inline">\([m]\)</span>.</p></li>
+</ul>
+<br>
+<div class="brdblack">
+<p><span style="color: purple;"><u><strong>Comparison of
+Criteria</strong></u></span></p>
+<p>Consider two nested models <span class="math inline">\([m_0] \subset
+[m_1]\)</span> such that <span class="math inline">\(m_1=m_0+1\)</span>.
+The model <span class="math inline">\([m_0]\)</span> consists of <span
+class="math inline">\(m_0\)</span> variables (including the intercept
+<span class="math inline">\(\mathbf{1}_n\)</span>), and <span
+class="math inline">\([m_1]\)</span> is a model with <span
+class="math inline">\(m_1=m_0+1\)</span> variables, such that: <span
+class="math display">\[
+  [m_1] = [m_0] \cup \{\text{one additional variable not in } [m_0]\}.
+\]</span></p>
+<p>We test the hypotheses: <span class="math display">\[
+  \mathscr{H}_0: \text{ the model is } [m_0] \quad \text{versus} \quad
+\mathscr{H}_1: \text{ the model is } [m_1].
+  \]</span></p>
+<p><span class="attention">⚠️</span> When <span
+class="math inline">\([m_0]\)</span> is chosen over <span
+class="math inline">\([m_1]\)</span>, we look for a test statistic such
+that <span class="math display">\[
+  \left\{T \leq {\large{q}}\right\}\quad\text{and not}\quad\left\{T &gt;
+{\Large{q}}\right\}
+  \]</span> where <span class="math inline">\(q = c(\alpha) &gt;
+0\)</span> is a constant depending on the significance level <span
+class="math inline">\(\alpha \in (0,1)\)</span> of the test.</p>
+</div>
+<p><br></p>
+<p>Next, we will describe various criteria for choosing between these
+two nested models <span class="math inline">\([m_0]\)</span> and <span
+class="math inline">\([m_1]\)</span> based on the data.</p>
+<div id="fisher-test-for-nested-models." class="section level2">
+<h2>4.1. Fisher test for nested models.</h2>
+<p>Consider the linear model <span class="math inline">\(Y = X\beta +
+\epsilon\)</span> where <span class="math inline">\(\epsilon \sim
+\mathscr{N}(\boldsymbol{0}_n, \sigma^2 \mathbf{I}_n)\)</span> and <span
+class="math inline">\(X\)</span> is full rank. Let <span
+class="math inline">\(\alpha \in (0,1)\)</span>. We want to test <span
+class="math display">\[
+\mathscr{H}_0: \text{the model is } [m_0] \subset [m_1] \quad
+\text{versus} \quad \mathscr{H}_1: \text{the model is } [m_1].
+\]</span> The test statistic <span class="math display">\[
+T = \frac{\text{RSS}(m_0) - \text{RSS}(m_1)}{\text{RSS}(m_1)} \times (n
+- m_1)\sim \large{\text{F}}_{1,n-m1}\quad\text{under } \mathscr{H}_0
+\]</span> Then <span class="math display">\[
+  \{T &gt; q^{\large{\text{F}}_{1,n-m1}}_{1-\alpha}\}
+  \]</span></p>
+<p>is a test of size <span class="math inline">\(\alpha\)</span>, where
+<span class="math inline">\(q_{1,n-m_0-1,1-\alpha}\)</span> denotes the
+<span class="math inline">\((1-\alpha)\)</span>-quantile of the Fisher
+distribution with <span class="math inline">\((1, n - m_0 - 1)\)</span>
+degrees of freedom.</p>
+<br>
+<div class="brdblack">
+<p><span class="solution">💡</span> Then for Fisher test, we select the
+model <span class="math inline">\([m_1]\)</span> if <span
+class="math display">\[
+\left \{T &gt;{\large{q}}\right\}\quad \text{with}\quad
+{\large{q}}=q^{\large{\text{F}}_{1,n-m1}}_{1-\alpha}
+  \]</span></p>
+</div>
+<p><br></p>
+<p><span style="color: blue;"> <strong><em>Proof.</em></strong> </span>
+Applying Nested theorem or we can prove</p>
+<p><span class="math display">\[\begin{eqnarray}
+T &amp;=&amp; \frac{\text{RSS}(m_0) - \text{RSS}(m_1)}{\text{RSS}(m_1)}
+\times (n - m_1)=\frac{\|Y - P_{m_0} Y\|^2 - \|Y - P_{m_1} Y\|^2}{\|Y -
+P_{m_1} Y\|^2} \times (n - m_1)=\frac{\|P_{m_1} Y- P_{m_0} Y\|^2 }{\|Y -
+P_{m_1} Y\|^2} \times (n - m_1)\\
+&amp;=&amp;\frac{\|P_{m_1|m_O} Y\|^2 }{\| P_{m_1^\perp} Y\|^2} \times (n
+- m_1)=\frac{\|P_{m_1|m_O} Y\|^2/1 }{\| P_{m_1^\perp} Y\|^2/(n-m_1)}\\
+&amp;=&amp;\frac{\|P_{m_1|m_O} \epsilon\|^2/1 }{\| P_{m_1^\perp}
+\epsilon\|^2/(n-m_1)} =\frac{\|P_{m_1|m_O} (\epsilon/\sigma)\|^2/1 }{\|
+P_{m_1^\perp} (\epsilon/\sigma)\|^2/(n-m_1)}\sim
+\large{\text{F}}_{1,n-m1}\quad\text{under } \mathscr{H}_0
+\end{eqnarray}\]</span><span class="math inline">\(\square\)</span></p>
+</div>
+<div id="the-determination-coefficient-r2" class="section level2">
+<h2>4.2. The determination coefficient <span
+class="math inline">\(R^2\)</span></h2>
+<p>It is recalled that,for a model <span
+class="math inline">\([m]\)</span> of size <span
+class="math inline">\(m\)</span> <span
+class="math display">\[R^2(m)=1-\frac{\text{RSS}(m)}{\text{TSS}}.\]</span></p>
+<br>
+<div class="brdblack">
+<p>In our setting <span class="math display">\[R^2(m_1)\geq
+R^2(m_0)\Rightarrow  T\geq 0\]</span> <span class="solution">💡</span>
+Then for <span class="math inline">\(R^2\)</span>, we select the model
+<span class="math inline">\([m_1]\)</span> if <span
+class="math display">\[
+\left \{T &gt;{\large{q}}\right\}\quad \text{with}\quad {\large{q}}=0
+  \]</span></p>
+</div>
+<p><br> <span style="color: blue;"> <strong><em>Proof.</em></strong>
+</span></p>
+<p><span class="math display">\[\begin{eqnarray}
+R^2(m_1)\geq
+R^2(m_0)&amp;\iff&amp;\frac{\text{RSS}(m_0)}{\text{TSS}}\geq\frac{\text{RSS}(m_1)}{\text{TSS}}\\
+&amp;\iff&amp;\frac{\text{RSS}(m_0)}{\text{RSS}(m_1)}\geq\frac{\text{RSS}(m_1)}{\text{RSS}(m_1)}\\
+&amp;\iff&amp;T:=\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\text{RSS}(m_1)}\times(n-m_1)\geq
+0
+\end{eqnarray}\]</span><span class="math inline">\(\square\)</span></p>
+<p><span class="solution">📝</span> In general, we do not use the <span
+class="math inline">\(R^2\)</span> as a selection criterion because it
+will always increase with the number of variables.<br> <span
+class="solution">📝</span> Used to compare two models with the same
+number of variables.</p>
+</div>
+<div id="the-adjusted-determination-coefficient-r2_a"
+class="section level2">
+<h2>4.3. The adjusted determination coefficient <span
+class="math inline">\(R^2_a\)</span></h2>
+<p>It is recalled that,for a model <span
+class="math inline">\([m]\)</span> of size <span
+class="math inline">\(m\)</span> <span class="math display">\[
+R^2_a(m)=1-\frac{(n-1)(1-R^2(m))}{n-m}=1-\frac{\text{RSS}(m)}{n-m}\times\frac{(n-1)}{\text{TSS}}.
+\]</span></p>
+<br>
+<div class="brdblack">
+<p>In our setting <span class="math display">\[
+R^2_a(m_1)\geq R^2_a(m_0)\iff T\geq 1.
+\]</span> <span class="solution">💡</span> Then for <span
+class="math inline">\(R_a^2\)</span>, we select the model <span
+class="math inline">\([m_1]\)</span> if <span class="math display">\[
+\left \{T &gt;{\large{q}}\right\}\quad \text{with}\quad {\large{q}}=1
+  \]</span></p>
+</div>
+<p><br> <span style="color: blue;"> <strong><em>Proof.</em></strong>
+</span></p>
+<p><span class="math display">\[\begin{eqnarray}
+R^2_a(m_1)\geq
+R^2_a(m_0)&amp;\iff&amp;\frac{\text{RSS}(m_0)}{n-m_0}\geq\frac{\text{RSS}(m_1)}{n-m_1}\\
+&amp;\iff&amp;\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{n-m_0}\geq\frac{\text{RSS}(m_1)}{n-m_1}-\frac{\text{RSS}(m_1)}{n-m_0}\\
+&amp;\iff&amp;\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{n-m_0}\geq\frac{\text{RSS}(m_1)}{(n-m_0)(n-m_1)}\\
+&amp;\iff&amp;T=\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\text{RSS}(m_1)}\times(n-m_1)\geq
+1
+\end{eqnarray}\]</span><span class="math inline">\(\square\)</span></p>
+<p><span class="solution">📝</span> This helps to correct the
+disadvantages of the <span class="math inline">\(R^2\)</span>
+coefficient.</p>
+</div>
+<div id="the-c_p-of-mallows" class="section level2">
+<h2>4.4. The <span class="math inline">\(C_p\)</span> of Mallows</h2>
+<p><span class="solution">📝</span> For all model <span
+class="math inline">\([m]\)</span>, we denote <span
+class="math inline">\(\widehat Y_m=P_mY.\)</span> <br> <span
+class="solution">📝</span> It is recalled that <span
+class="math inline">\(\text{RSS}(m)=\|P_mY-Y\|^2\)</span> <br> <span
+class="solution">📝</span> Note that <span
+class="math inline">\(\text{RSS}(m)=\|P_mY-Y\|^2 \neq
+\|P_mY-X\beta\|^2.\)</span></p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[<span
+class="math inline">\(C_p\)</span> of Mallows]</strong> </span> Let
+<span class="math inline">\([m]\)</span> be any model. The Mallows
+criterion associated with <span class="math inline">\([m]\)</span> is
+defined by: <span
+class="math display">\[C_p(m)=\frac{\text{RSS}(m)}{\widehat\sigma^2}-n+2m.\]</span></p>
+</div>
+<p><br></p>
+<br>
+<div class="brdblack">
+<p><span style="color: orange;"><strong>[Proposition 2]</strong> </span>
+<span style="color: blue;"><strong>We can show that</strong> </span></p>
+<p>(a.) <span
+class="math inline">\(\text{E}[\text{RSS}(m)]=\text{E}[\|\widehat
+Y_m-Y\|^2]=\|(\mathbf{I}-P_m)X\beta\|^2+(n-m)\sigma^2\)</span>.<br> (b.)
+<span class="math inline">\(\text{E}[\|\widehat
+Y_m-X\beta\|^2]=\|(\mathbf{I}-P_m)X\beta\|^2+m\sigma^2.\)</span><br>
+(c.) <span
+class="math inline">\(\text{E}[C_p(m)\widehat\sigma^2]=\text{E}[\|\widehat
+Y_m-X\beta\|^2].\)</span></p>
+</div>
+<p><span style="color: blue;"> <strong><em>Proof.</em></strong> </span>
+Will be proved in lecture class.<span
+class="math inline">\(\square\)</span></p>
+<p><span class="solution">📝</span> <strong>Unbiased estimator of the
+mean quadratic error:</strong> We deduce from (c.) that <span
+class="math inline">\(C_p(m)\widehat\sigma^2\)</span> is an unbiased
+estimator of the unknown mean quadratic prediction error <span
+class="math inline">\(\text{E}[\|\widehat Y_m-X\beta\|^2]\)</span>.<br>
+<span class="solution">📝</span> For any model <span
+class="math inline">\([m]\)</span>, the <strong>mean squared error
+(MSE)</strong> of <span class="math inline">\(\widehat Y_m\)</span> is
+<span class="math inline">\(\text{E}[\|\widehat
+Y_m-X\beta\|^2]\)</span>.<br></p>
+<p><span
+style="color: blue;"><u><strong>Discussion.</strong></u></span></p>
+<p><span class="solution">📌</span> The mean squared error (MSE) serves
+as an <strong>effective criterion</strong> for evaluating the
+performance of the estimator <span class="math inline">\(\widehat
+Y_m\)</span>. In other words, selecting an optimal model indexed by
+<span class="math inline">\(m\)</span> can be viewed as the problem of
+minimizing the following quantity: <span class="math display">\[
+m\longmapsto\text{E}[\|\widehat Y_m-X\beta\|^2].
+\]</span> Unfortunately, this quantity depends on the unknown parameter
+<span class="math inline">\(\beta\)</span>. We have at our disposal
+<em>an unbiased estimator</em> of the MSE. We could then minimize <span
+class="math display">\[m\longmapsto C_p(m)\widehat\sigma^2.\]</span>
+Since <span class="math inline">\(\widehat\sigma^2\)</span> does not
+depend on the model, it is natural, especially when trying to estimate
+<span class="math inline">\(X\beta\)</span> to minimize <span
+class="math display">\[m\longmapsto C_p(m).\]</span></p>
+<p><span class="solution">📌</span> <strong>A penalized
+criterion.</strong> We defined the <span
+class="math inline">\(C_p\)</span> of Mallows criterion as follows <span
+class="math display">\[
+C_p(m)\widehat\sigma^2=\text{RSS}(m)+2m\widehat\sigma^2-n\widehat\sigma^2:=\text{RSS}(m)+\text{pen}(m).
+\]</span> When studying the classic <span
+class="math inline">\(R^2\)</span>, it appeared that the more variables
+were added, the more the <span class="math inline">\(\text{RSS}\)</span>
+decreased: <span class="math display">\[
+m\text{ increases}\Rightarrow \text{RSS}(m)\text{ decreases}.
+\]</span> Adding a penalty <span
+class="math inline">\(\text{pen}(m):=2m\widehat\sigma^2\)</span> to the
+<span class="math inline">\(\text{RSS}(m)\)</span> in the criterion is
+an alternative way to the adjusted <span
+class="math inline">\(R^2\)</span> to counterbalance this effect <span
+class="math display">\[
+m\text{ increases}\Rightarrow \text{pen}(m)\text{ increases}.
+\]</span> We say that we <strong>penalize the big models</strong>.</p>
+<p><span class="solution">📌</span> <strong>Adding useless variables to
+the real model.</strong> Set that the <em>“real”</em> model denoted by
+<span class="math inline">\([m^*]\)</span> is included in the model
+<span class="math inline">\([m_0]\)</span>, then <span
+class="math display">\[
+X\beta=P_{m_0}X\beta\Leftrightarrow
+X\beta-P_{m_0}X\beta=\boldsymbol{0}_n.
+\]</span> The equation <span class="math inline">\(a.\)</span> then
+becomes : <span
+class="math inline">\(\text{E}[\text{RSS}(m_0)]=\text{E}[\|\widehat
+Y_{m_0}-Y\|^2]=(n-m_0)\sigma^2\)</span> and we have <span
+class="math display">\[
+\text{RSS}(m_0)\approx (n-m_0)\widehat\sigma^2
+\]</span> Equations <span class="math inline">\(b.\)</span> and <span
+class="math inline">\(c.\)</span> give then: <span
+class="math inline">\(\text{E}[C_p(m_0)\widehat\sigma^2]=\text{E}[\|\widehat
+Y_{m_0}-X\beta\|^2]=m_0\sigma^2.\)</span> Therefore, <span
+class="math display">\[
+C_p(m_0)\approx m_0.
+\]</span> Thus, if we add useless variables (increases <span
+class="math inline">\(m_0\)</span>) to the true model (included in <span
+class="math inline">\([m_0]\)</span>), then <span
+class="math inline">\(\text{RSS}(m_0)\approx (n-m_0)\sigma^2\)</span>
+will not significantly decrease compared to the <span
+class="math inline">\(C_p(m_0)\approx m_0\)</span> which will increase
+more significantly.</p>
+<p><span class="solution">📌</span> <strong>Forgetting important
+variables to the real model.</strong> If the “real” model <span
+class="math inline">\([m^*]\)</span> is not fully included in <span
+class="math inline">\([m_0]\)</span> then <span class="math display">\[
+X\beta\neq P_{m_0}X\beta\Leftrightarrow X\beta-P_{m_0}X\beta=C.
+\]</span> So with the same reasoning as before we have:</p>
+<ol style="list-style-type: lower-alpha">
+<li><span
+class="math inline">\(\text{E}[\text{RSS}(m_0)]=\text{E}[\|\widehat
+Y_{m_0}-Y\|^2]=C+(n-m_0)\sigma^2\)</span>.<br></li>
+<li><span class="math inline">\(\text{E}[\|\widehat
+Y_{m_0}-X\beta\|^2]=C+m_0\sigma^2.\)</span><br></li>
+<li><span
+class="math inline">\(\text{E}[C_p(m_0)\widehat\sigma^2]=\text{E}[\|\widehat
+Y_{m_0}-X\beta\|^2].\)</span></li>
+</ol>
+<p>We have then <span class="math display">\[\text{RSS}(m_0)\approx
+(n-m_0)\widehat\sigma^2+C\quad\text{ et }C_p(m_0)\approx m_0 +C\]</span>
+where <span class="math inline">\(C&gt;0\)</span>. In this case, <span
+class="math inline">\(C_p(m_0)&gt;m_0\)</span>.</p>
+<p><span style="color: blue;"><u><strong>To
+resume</strong></u></span></p>
+<ul>
+<li>If we add useless variables to the “real” model, then <span
+class="math inline">\(C_p(m_0)\approx m_0.\)</span> <br></li>
+<li>If we forget important variables to the “real” model, then <span
+class="math inline">\(C_p(m_0)\approx m_0 +C\)</span>. where <span
+class="math inline">\(C&gt;0\)</span>.</li>
+</ul>
+<p>So if beyond the problem of estimating <span
+class="math inline">\(X\beta\)</span>, we are interested, by the
+detection of the good variables, we will be interested in models <span
+class="math inline">\([m_0]\)</span> such that <span
+class="math inline">\(C_p(m_0)\leq m_0\)</span>.</p>
+<br>
+<div class="brdblack">
+<p><span class="solution">📌</span> It should be noted that the previous
+interpretations are only true if the choice of the model (selection of
+the optimal <span class="math inline">\([m]\)</span>) is independent of
+the data (computation of <span class="math inline">\(\widehat
+Y_m=P_mY\)</span>), so we must cut the sample in 2:</p>
+<ul>
+<li>A sample for the <em>learning</em> to compute <span
+class="math inline">\(\widehat Y_{m}\)</span> for all <span
+class="math inline">\([m]\)</span>.<br></li>
+<li>Another sample for <em>validation</em> to select <span
+class="math inline">\([m_ {optimal}]\)</span>.</li>
+</ul>
+</div>
+<p><br></p>
+<br>
+<div class="brdblack">
+<p>In our setting <span class="math display">\[C_p(m_1)\leq
+C_p(m_0)\Rightarrow  T\geq 2\]</span> <span class="solution">💡</span>
+Then for <span class="math inline">\(C_p\)</span>, we select the model
+<span class="math inline">\([m_1]\)</span> if <span
+class="math display">\[
+\left \{T &gt;{\large{q}}\right\}\quad \text{with}\quad {\large{q}}=2
+  \]</span></p>
+</div>
+<p><br> <span style="color: blue;"> <strong><em>Proof.</em></strong>
+</span> <span class="math display">\[\begin{eqnarray*}
+C_p(m_0)\leq
+C_p(m_1)&amp;\iff&amp;\frac{\text{RSS}(m_0)}{\widehat\sigma^2}\leq\frac{\text{RSS}(m_1)}{\widehat\sigma^2}+2\\
+&amp;\iff&amp;\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\widehat\sigma^2}\leq
+2.
+\end{eqnarray*}\]</span> To conclude, prelace <span
+class="math inline">\(\widehat\sigma^2\)</span> by <span
+class="math inline">\(\text{RSS}(m_1)/(n-m_0-1)\)</span> <span
+class="math inline">\(\square\)</span></p>
+</div>
+<div id="aicbic-criteria" class="section level2">
+<h2>4.5. AIC/BIC criteria</h2>
+<br>
+<div class="brdredk">
+<p><span class="solution">✍</span> In our setting, the model <span
+class="math inline">\([m]\)</span> that maximizes the maximized
+likelihood on <span class="math inline">\(m\)</span> is the model that
+minimizes <span class="math display">\[m\longmapsto
+\text{RSS}(m).\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> We have seen that minimizing the
+<span class="math inline">\(\text{RSS}\)</span> is not necessarily the
+best thing to do because it amounts to taking the largest model (<span
+class="math inline">\(p=n=m\)</span>).<br> <span
+class="solution">📝</span> As for the <span
+class="math inline">\(C_p\)</span> of Mallows, we want to add a
+(positive) penalty to penalize the big models.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Definition]AIC/BIC]</strong>
+</span> The AIC of a model <span class="math inline">\([m]\)</span> is
+defined by <span
+class="math display">\[\text{AIC}(m)=n\log\left(\frac{\text{RSS}(m)}{n}\right)+2m.
+\]</span></p>
+<p>The BIC of a model <span class="math inline">\([m]\)</span> is
+defined by <span class="math display">\[
+\text{BIC}(m)=n\log\left(\frac{\text{RSS}(m)}{n}\right)+\log (n)\times
+m.
+\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> We select the model <span
+class="math inline">\([m]\)</span> that minimizes <span
+class="math display">\[m\longmapsto
+\text{AIC}(m)\,\,\text{  or  }\,\,m\longmapsto \text{BIC}(m)\]</span>
+<span class="solution">📝</span>If <span
+class="math inline">\(n&gt;7\)</span> (<span
+class="math inline">\(\Rightarrow\log (n)&gt;2\)</span>), the penalty
+term <span class="math inline">\(m \log(n)\)</span> in the BIC criterion
+becomes larger than the term <span class="math inline">\(2m\)</span> in
+the AIC criterion. This means that, for models with large <span
+class="math inline">\(n\)</span>, BIC tends to select simpler models
+than AIC because it imposes a greater penalty on model complexity.</p>
+<br>
+<div class="brdblack">
+<p>In our setting <span class="math display">\[
+\text{AIC}(m_1)\leq \text{AIC}(m_0)\iff T\geq
+(e^{\frac{2}{n}}-1)\times(n-m_1).
+\]</span> <span class="math display">\[
+\text{BIC}(m_1)\leq \text{BIC}(m_0)\iff
+T\geq\left(e^{\frac{\log(n)}{n}}-1\right)\times(n-m_1)
+\]</span></p>
+<p><span class="solution">💡</span> Then, we select the model <span
+class="math inline">\([m_1]\)</span> if <span class="math display">\[
+\left \{T &gt;{\large{q}}\right\}\quad \text{with}\quad
+{\large{q}}=\left\{\begin{array}{ll}
+  (e^{\frac{2}{n}}-1)\times(n-m_1)&amp;\text{for AIC}\\
+\left(e^{\frac{\log(n)}{n}}-1\right)\times(n-m_1)&amp;\text{for BIC}\\
+\end{array}\right.
+  \]</span></p>
+</div>
+<p><br> <span style="color: blue;"> <strong><em>Proof.</em></strong>
+</span></p>
+<p><span class="math display">\[\begin{eqnarray}
+\text{AIC}(m_1)\leq \text{AIC}(m_0)&amp;\iff&amp;
+\log\left(\frac{\text{RSS}(m_1)}{n}\right)+\frac{2m_1}{n}\leq
+\log\left(\frac{\text{RSS}(m_0)}{n}\right)+\frac{2m_0}{n}\\
+&amp;\iff&amp;
+\log\left(\frac{\text{RSS}(m_0)}{\text{RSS}(m_1)}\right)\geq
+\frac{2}{n}\\
+&amp;\iff&amp;  \frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\text{RSS}(m_1)}\geq
+e^{\frac{2}{n}}-1\\
+&amp;\iff&amp;
+T:=\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\text{RSS}(m_1)}\times(n-m_1)\geq
+(e^{\frac{2}{n}}-1)\times(n-m_1)
+\end{eqnarray}\]</span></p>
+<p><span class="math display">\[\begin{eqnarray}
+\text{BIC}(m_1)\leq \text{BIC}(m_0)&amp;\iff&amp;
+\log\left(\frac{\text{RSS}(m_1)}{n}\right)+\frac{\log(n)m_1}{n}\leq
+\log\left(\frac{\text{RSS}(m_0)}{n}\right)+\frac{\log(n)m_0}{n}\\
+&amp;\iff&amp;
+\log\left(\frac{\text{RSS}(m_0)}{\text{RSS}(m_1)}\right)\geq
+\frac{\log(n)}{n}\\
+&amp;\iff&amp; \frac{\text{RSS}(m_0)}{\text{RSS}(m_1)}\geq
+e^{\frac{\log(n)}{n}}\\
+&amp;\iff&amp;
+T:=\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\text{RSS}(m_1)}\times(n-m_1)\geq
+\left(e^{\frac{\log(n)}{n}}-1\right)\times(n-m_1)
+\end{eqnarray}\]</span><span class="math inline">\(\square\)</span></p>
+</div>
+<div id="comparaison-of-criteria" class="section level2">
+<h2>4.6. Comparaison of criteria</h2>
+<div class="brdred">
+<p><span class="solution">💡</span> For each of the 6 criteria, the
+study is roughly reduced to <span
+class="math display">\[T:=\frac{\text{RSS}(m_0)-\text{RSS}(m_1)}{\text{RSS}(m_1)}\times
+(n-m_1)\leq {\large{q}}\quad\text{with}\]</span> <span
+class="math inline">\({\large{q}}=q^{\large{\text{F}}_{1,n-m1}}_{1-\alpha}\approx4\)</span>
+for the Fisher test.<br> <span
+class="math inline">\({\large{q}}=0\)</span> for the <span
+class="math inline">\(R^2\)</span> coefficient.<br> <span
+class="math inline">\({\large{q}}=1\)</span> for the adjusted <span
+class="math inline">\(R^2_a\)</span> coefficient.<br> <span
+class="math inline">\({\large{q}}=2\)</span> for the <span
+class="math inline">\(C_p\)</span> of Mallows.<br> <span
+class="math inline">\({\large{q}}=(e^{\frac{2}{n}}-1)\times(n-m_1)\)</span>
+for the AIC.<br> <span class="math inline">\({\large{q}}=
+\left(e^{\frac{\log(n)}{n}}-1\right)\times(n-m_1)\)</span> for the
+BIC.</p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> The most favorable to <span
+class="math inline">\([m_0]\)</span> is the BIC criterion, the most
+favorable to <span class="math inline">\([m_1]\)</span> is the <span
+class="math inline">\(R^2\)</span> coefficient. We must be wary of these
+comparisons because they still depend on the value of <span
+class="math inline">\(n\)</span>, of <span
+class="math inline">\(\widehat\sigma^2\)</span>,…<br> <span
+class="solution">📝</span> It should be remembered that for the Fisher
+test, the criterion for two models can only be compared if one model
+contains the other (nested models).</p>
+</div>
+</div>
+<div id="step-by-step-method" class="section level1">
+<h1>5. Step-by-step method</h1>
+<ul>
+<li><p>Minimization of criterion can be a delicate task when <span
+class="math inline">\(p\)</span> is high <strong>(<span
+class="math inline">\(2^{p-1}\)</span> different models,all containing
+<span class="math inline">\(\mathbf{1}_n\)</span>)</strong>.</p></li>
+<li><p>Exhaustive search is not possible (either because we want to use
+Fisher’s test, or because <span class="math inline">\(p\)</span> is too
+big).</p></li>
+<li><p>We can use a step-by-step method combined with one of the 6
+criteria previously studied.</p></li>
+</ul>
+<p><span class="solution">🙂</span> <strong>Advantages</strong> : better
+interpretability, improve prediction performance.</p>
+<p><span class="solution">😢</span> <strong>Disadvantages</strong> : Do
+not test all possible combinations (Global minimum is not guaranteed.)
+Greedy algorithm, may provide a suboptimal model for correlated
+predictors.</p>
+<p>Three famous step-by-step methods (intercept is alawys included) are
+:</p>
+<ul>
+<li><strong>Forward selection</strong></li>
+<li><strong>Backard selection </strong></li>
+<li><strong>Stepwise selection/both selction</strong></li>
+</ul>
+<p><span class="solution">📝</span>Under <strong>R</strong> the function
+<code>stepAIC</code>of the <code>library(MASS)</code>.<br> <span
+class="solution">📝</span> The command <code>k=log(n)</code> has to be
+added if we want to use BIC criterion (AIC is by default).<br> <span
+class="solution">📝</span> The command <code>k=2</code> has to be added
+if we want to use <span class="math inline">\(C_p\)</span> mallows
+criterion.<br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Declare our full
+model <code>mod</code> and the model reduced to the intercept
+<code>mod0</code></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>mod0<span class="ot">&lt;-</span><span class="fu">lm</span>(maxO3<span class="sc">~</span><span class="dv">1</span>,<span class="at">data=</span>train)</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>mod<span class="ot">&lt;-</span><span class="fu">lm</span>(maxO3<span class="sc">~</span>.,<span class="at">data=</span>train)</span></code></pre></div>
+<div id="forward-selection" class="section level2">
+<h2>5.1. Forward selection</h2>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Forward selection]</strong>
+</span> \begin{mdframed}[backgroundcolor=green!10] We start with the
+model resume to the intercept <span
+class="math inline">\(\mathbf{1}_n\)</span>. At each step, a
+regressor/variable is added to the model, the one with the best
+contribution (<span class="math inline">\(i.e.\)</span> the ones which
+improves the chosen criterion). We stop when the criterion can not be
+improved by adding a new regressor/variable.</p>
+</div>
+<p><br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compute the
+forward selection with the function <code>stepAIC</code> of the
+<code>library(MASS)</code></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>mod_forw<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(mod0, maxO3<span class="sc">~</span>T9<span class="sc">+</span>T12<span class="sc">+</span>T15<span class="sc">+</span>Ne9<span class="sc">+</span>Ne12<span class="sc">+</span>Ne15<span class="sc">+</span>Vx9<span class="sc">+</span>Vx12<span class="sc">+</span>Vx15<span class="sc">+</span>maxO3v,<span class="at">data=</span>train,<span class="at">trace=</span>T,<span class="at">direction=</span><span class="fu">c</span>(<span class="st">&#39;forward&#39;</span>))</span></code></pre></div>
+<pre><code>## Start:  AIC=603.32
+## maxO3 ~ 1
+## 
+##          Df Sum of Sq   RSS    AIC
+## + T12     1     45529 30967 524.83
+## + T15     1     44454 32042 527.87
+## + T9      1     39581 36915 540.47
+## + maxO3v  1     32983 43514 555.11
+## + Ne9     1     30996 45501 559.08
+## + Ne12    1     30917 45580 559.23
+## + Vx9     1     22494 54002 574.32
+## + Vx12    1     18378 58118 580.86
+## + Ne15    1     17254 59242 582.57
+## + Vx15    1     15637 60860 584.96
+## &lt;none&gt;                76496 603.32
+## 
+## Step:  AIC=524.83
+## maxO3 ~ T12
+## 
+##          Df Sum of Sq   RSS    AIC
+## + maxO3v  1    6561.7 24406 505.64
+## + Vx9     1    2791.5 28176 518.42
+## + Ne9     1    2430.1 28537 519.56
+## + Vx15    1    2093.5 28874 520.60
+## + Vx12    1    1984.8 28982 520.94
+## + Ne12    1    1428.1 29539 522.63
+## + Ne15    1     976.9 29990 523.98
+## + T15     1     933.6 30034 524.11
+## &lt;none&gt;                30967 524.83
+## + T9      1     229.6 30738 526.17
+## 
+## Step:  AIC=505.64
+## maxO3 ~ T12 + maxO3v
+## 
+##        Df Sum of Sq   RSS    AIC
+## + Ne9   1    3812.4 20593 492.52
+## + Vx9   1    2200.0 22206 499.23
+## + Vx12  1    1992.6 22413 500.06
+## + Vx15  1    1927.8 22478 500.32
+## + Ne12  1    1658.8 22747 501.37
+## + Ne15  1     826.9 23578 504.57
+## + T15   1     562.1 23843 505.57
+## &lt;none&gt;              24406 505.64
+## + T9    1       1.4 24404 507.63
+## 
+## Step:  AIC=492.52
+## maxO3 ~ T12 + maxO3v + Ne9
+## 
+##        Df Sum of Sq   RSS    AIC
+## + Vx9   1   1125.38 19468 489.52
+## + Vx12  1    691.45 19902 491.48
+## + Vx15  1    676.51 19917 491.55
+## &lt;none&gt;              20593 492.52
+## + T15   1    151.72 20441 493.86
+## + Ne15  1     21.88 20571 494.43
+## + T9    1     15.05 20578 494.46
+## + Ne12  1      8.25 20585 494.49
+## 
+## Step:  AIC=489.52
+## maxO3 ~ T12 + maxO3v + Ne9 + Vx9
+## 
+##        Df Sum of Sq   RSS    AIC
+## &lt;none&gt;              19468 489.52
+## + T15   1    67.028 19401 491.21
+## + T9    1    48.546 19419 491.30
+## + Vx15  1    31.481 19436 491.38
+## + Vx12  1    17.409 19450 491.44
+## + Ne15  1     2.213 19466 491.51
+## + Ne12  1     0.017 19468 491.52</code></pre>
+<p><span style="font-size: 30 px;">📈</span>Here, we select the
+following model.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>mod_forw</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ T12 + maxO3v + Ne9 + Vx9, data = train)
+## 
+## Coefficients:
+## (Intercept)          T12       maxO3v          Ne9          Vx9  
+##     19.9406       2.4482       0.3707      -2.8073       1.6397</code></pre>
+<p><span style="font-size: 30 px;">📈</span>While with criterion BIC, we
+select the following model</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>n<span class="ot">&lt;-</span><span class="fu">length</span>(train<span class="sc">$</span>maxO3)</span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>mod_forw_BIC<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(mod0, maxO3<span class="sc">~</span>T9<span class="sc">+</span>T12<span class="sc">+</span>T15<span class="sc">+</span>Ne9<span class="sc">+</span>Ne12<span class="sc">+</span>Ne15<span class="sc">+</span>Vx9<span class="sc">+</span>Vx12<span class="sc">+</span>Vx15<span class="sc">+</span>maxO3v,<span class="at">data=</span>train,<span class="at">trace=</span>F,<span class="at">k=</span><span class="fu">log</span>(n),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">&#39;forward&#39;</span>))</span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>mod_forw_BIC</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ T12 + maxO3v + Ne9 + Vx9, data = train)
+## 
+## Coefficients:
+## (Intercept)          T12       maxO3v          Ne9          Vx9  
+##     19.9406       2.4482       0.3707      -2.8073       1.6397</code></pre>
+</div>
+<div id="backard-selection" class="section level2">
+<h2>5.2. Backard selection</h2>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Backard selection]</strong>
+</span> We stat the “biggest” model whose intercept. At each step, a
+regressor/variable is removed to the model, the one which improves the
+chosen criterion. We stop when the criterion can not be improved by
+removing a new regressor/variable.</p>
+</div>
+<p><br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compute the
+backward selection with the function <code>stepAIC</code> of the
+<code>library(MASS)</code></p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>mod_back<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(mod,<span class="sc">~</span>.,<span class="at">trace=</span>T,<span class="at">direction=</span><span class="fu">c</span>(<span class="st">&quot;backward&quot;</span>))</span></code></pre></div>
+<pre><code>## Start:  AIC=500.64
+## maxO3 ~ T9 + T12 + T15 + Ne9 + Ne12 + Ne15 + Vx9 + Vx12 + Vx15 + 
+##     maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## - Vx12    1       3.3 19279 498.65
+## - Vx15    1      19.6 19295 498.73
+## - Ne12    1      35.8 19311 498.80
+## - T9      1      37.9 19313 498.81
+## - Ne15    1      54.4 19330 498.89
+## - T12     1      93.7 19369 499.07
+## - T15     1     116.2 19392 499.17
+## - Vx9     1     423.9 19699 500.57
+## &lt;none&gt;                19275 500.64
+## - Ne9     1    1215.7 20491 504.08
+## - maxO3v  1    5916.5 25192 522.46
+## 
+## Step:  AIC=498.65
+## maxO3 ~ T9 + T12 + T15 + Ne9 + Ne12 + Ne15 + Vx9 + Vx15 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## - Vx15    1      16.8 19296 496.73
+## - Ne12    1      32.7 19311 496.80
+## - T9      1      34.6 19313 496.81
+## - Ne15    1      53.7 19332 496.90
+## - T12     1     110.2 19389 497.16
+## - T15     1     113.7 19392 497.18
+## &lt;none&gt;                19279 498.65
+## - Vx9     1     507.1 19786 498.96
+## - Ne9     1    1232.8 20512 502.17
+## - maxO3v  1    6123.2 25402 521.20
+## 
+## Step:  AIC=496.73
+## maxO3 ~ T9 + T12 + T15 + Ne9 + Ne12 + Ne15 + Vx9 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## - Ne12    1      33.4 19329 494.88
+## - T9      1      46.5 19342 494.94
+## - Ne15    1      51.0 19346 494.97
+## - T12     1      99.8 19395 495.19
+## - T15     1     116.0 19412 495.26
+## &lt;none&gt;                19296 496.73
+## - Vx9     1    1112.4 20408 499.72
+## - Ne9     1    1283.9 20579 500.46
+## - maxO3v  1    6106.9 25402 519.20
+## 
+## Step:  AIC=494.88
+## maxO3 ~ T9 + T12 + T15 + Ne9 + Ne15 + Vx9 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## - Ne15    1      23.6 19352 492.99
+## - T9      1      30.1 19359 493.02
+## - T15     1      90.2 19419 493.30
+## - T12     1     209.6 19538 493.84
+## &lt;none&gt;                19329 494.88
+## - Vx9     1    1091.8 20421 497.77
+## - Ne9     1    2270.5 21599 502.77
+## - maxO3v  1    6312.4 25641 518.04
+## 
+## Step:  AIC=492.99
+## maxO3 ~ T9 + T12 + T15 + Ne9 + Vx9 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## - T9      1      48.2 19401 491.21
+## - T15     1      66.7 19419 491.30
+## - T12     1     252.2 19605 492.14
+## &lt;none&gt;                19352 492.99
+## - Vx9     1    1077.1 20430 495.81
+## - Ne9     1    2423.0 21775 501.49
+## - maxO3v  1    6296.0 25648 516.06
+## 
+## Step:  AIC=491.21
+## maxO3 ~ T12 + T15 + Ne9 + Vx9 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## - T15     1      67.0 19468 489.52
+## &lt;none&gt;                19401 491.21
+## - T12     1     609.0 20010 491.96
+## - Vx9     1    1040.7 20441 493.86
+## - Ne9     1    2539.6 21940 500.16
+## - maxO3v  1    6995.9 26396 516.62
+## 
+## Step:  AIC=489.52
+## maxO3 ~ T12 + Ne9 + Vx9 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## &lt;none&gt;                19468 489.52
+## - Vx9     1    1125.4 20593 492.52
+## - Ne9     1    2737.8 22206 499.23
+## - T12     1    3688.4 23156 502.96
+## - maxO3v  1    7206.2 26674 515.55</code></pre>
+<p><span style="font-size: 30 px;">📈</span>Here, we select the
+following model</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>mod_back</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ T12 + Ne9 + Vx9 + maxO3v, data = train)
+## 
+## Coefficients:
+## (Intercept)          T12          Ne9          Vx9       maxO3v  
+##     19.9406       2.4482      -2.8073       1.6397       0.3707</code></pre>
+<p><span style="font-size: 30 px;">📈</span> While with criterion BIC,
+we select the following model</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a><span class="fu">stepAIC</span>(mod,<span class="sc">~</span>.,<span class="at">trace=</span>F,<span class="at">k=</span><span class="fu">log</span>(n),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">&quot;backward&quot;</span>))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ T12 + Ne9 + Vx9 + maxO3v, data = train)
+## 
+## Coefficients:
+## (Intercept)          T12          Ne9          Vx9       maxO3v  
+##     19.9406       2.4482      -2.8073       1.6397       0.3707</code></pre>
+</div>
+<div id="stepwise-selectionboth-selection" class="section level2">
+<h2>5.3. Stepwise selection/both selection</h2>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Both selection]</strong> </span>
+This is the same method as the Forward selection method, except that at
+each step, a regressor/variable present in the model can be challenged
+(removed or added).</p>
+</div>
+<p><br></p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compute the both
+selection with the function <code>stepAIC</code> of the
+<code>library(MASS)</code></p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>mod_both<span class="ot">&lt;-</span><span class="fu">stepAIC</span>(mod0, maxO3<span class="sc">~</span>T9<span class="sc">+</span>T12<span class="sc">+</span>T15<span class="sc">+</span>Ne9<span class="sc">+</span>Ne12<span class="sc">+</span>Ne15<span class="sc">+</span>Vx9<span class="sc">+</span>Vx12<span class="sc">+</span>Vx15<span class="sc">+</span>maxO3v,<span class="at">data=</span>train,<span class="at">trace=</span>T,<span class="at">direction=</span><span class="fu">c</span>(<span class="st">&#39;both&#39;</span>))</span></code></pre></div>
+<pre><code>## Start:  AIC=603.32
+## maxO3 ~ 1
+## 
+##          Df Sum of Sq   RSS    AIC
+## + T12     1     45529 30967 524.83
+## + T15     1     44454 32042 527.87
+## + T9      1     39581 36915 540.47
+## + maxO3v  1     32983 43514 555.11
+## + Ne9     1     30996 45501 559.08
+## + Ne12    1     30917 45580 559.23
+## + Vx9     1     22494 54002 574.32
+## + Vx12    1     18378 58118 580.86
+## + Ne15    1     17254 59242 582.57
+## + Vx15    1     15637 60860 584.96
+## &lt;none&gt;                76496 603.32
+## 
+## Step:  AIC=524.83
+## maxO3 ~ T12
+## 
+##          Df Sum of Sq   RSS    AIC
+## + maxO3v  1      6562 24405 505.64
+## + Vx9     1      2792 28176 518.42
+## + Ne9     1      2430 28537 519.56
+## + Vx15    1      2093 28874 520.60
+## + Vx12    1      1985 28982 520.94
+## + Ne12    1      1428 29539 522.63
+## + Ne15    1       977 29990 523.98
+## + T15     1       934 30034 524.11
+## &lt;none&gt;                30967 524.83
+## + T9      1       230 30738 526.17
+## - T12     1     45529 76496 603.32
+## 
+## Step:  AIC=505.64
+## maxO3 ~ T12 + maxO3v
+## 
+##          Df Sum of Sq   RSS    AIC
+## + Ne9     1    3812.4 20593 492.52
+## + Vx9     1    2200.0 22205 499.23
+## + Vx12    1    1992.6 22413 500.06
+## + Vx15    1    1927.8 22478 500.32
+## + Ne12    1    1658.8 22747 501.37
+## + Ne15    1     826.9 23579 504.57
+## + T15     1     562.1 23843 505.57
+## &lt;none&gt;                24405 505.64
+## + T9      1       1.4 24404 507.63
+## - maxO3v  1    6561.7 30967 524.83
+## - T12     1   19108.2 43514 555.11
+## 
+## Step:  AIC=492.52
+## maxO3 ~ T12 + maxO3v + Ne9
+## 
+##          Df Sum of Sq   RSS    AIC
+## + Vx9     1    1125.4 19468 489.52
+## + Vx12    1     691.5 19902 491.48
+## + Vx15    1     676.5 19917 491.55
+## &lt;none&gt;                20593 492.52
+## + T15     1     151.7 20441 493.86
+## + Ne15    1      21.9 20571 494.43
+## + T9      1      15.0 20578 494.46
+## + Ne12    1       8.3 20585 494.49
+## - Ne9     1    3812.4 24406 505.64
+## - T12     1    4695.1 25288 508.80
+## - maxO3v  1    7944.0 28537 519.56
+## 
+## Step:  AIC=489.52
+## maxO3 ~ T12 + maxO3v + Ne9 + Vx9
+## 
+##          Df Sum of Sq   RSS    AIC
+## &lt;none&gt;                19468 489.52
+## + T15     1      67.0 19401 491.21
+## + T9      1      48.5 19419 491.30
+## + Vx15    1      31.5 19436 491.38
+## + Vx12    1      17.4 19450 491.44
+## + Ne15    1       2.2 19466 491.51
+## + Ne12    1       0.0 19468 491.52
+## - Vx9     1    1125.4 20593 492.52
+## - Ne9     1    2737.8 22206 499.23
+## - T12     1    3688.4 23156 502.96
+## - maxO3v  1    7206.2 26674 515.55</code></pre>
+<p><span style="font-size: 30 px;">📈</span>Here, we select the
+following model</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a>mod_both</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ T12 + maxO3v + Ne9 + Vx9, data = train)
+## 
+## Coefficients:
+## (Intercept)          T12       maxO3v          Ne9          Vx9  
+##     19.9406       2.4482       0.3707      -2.8073       1.6397</code></pre>
+<p><span class="solution">👀</span>While with criterion BIC, we select
+the following model</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a><span class="fu">stepAIC</span>(mod0, maxO3<span class="sc">~</span>T9<span class="sc">+</span>T12<span class="sc">+</span>T15<span class="sc">+</span>Ne9<span class="sc">+</span>Ne12<span class="sc">+</span>Ne15<span class="sc">+</span>Vx9<span class="sc">+</span>Vx12<span class="sc">+</span>Vx15<span class="sc">+</span>maxO3v,<span class="at">data=</span>train,<span class="at">trace=</span>F,<span class="at">k=</span><span class="fu">log</span>(n), <span class="at">direction=</span><span class="fu">c</span>(<span class="st">&#39;both&#39;</span>))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = maxO3 ~ T12 + maxO3v + Ne9 + Vx9, data = train)
+## 
+## Coefficients:
+## (Intercept)          T12       maxO3v          Ne9          Vx9  
+##     19.9406       2.4482       0.3707      -2.8073       1.6397</code></pre>
+</div>
+<div id="discussion" class="section level2">
+<h2>5.4. Discussion</h2>
+<p>Here, the three methods select the same model using the AIC and BIC
+criteria.</p>
+<p><span class="solution"><span
+style="color: blue;"><strong>Ⓡ</strong></span> </span> Compute theis
+model and the full model by a Fisher test</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>mod_0 <span class="ot">&lt;-</span> mod_forw_BIC</span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a>mod_1 <span class="ot">&lt;-</span> mod</span>
+<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a><span class="fu">anova</span>(mod_0, mod_1)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Res.Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["RSS"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Df"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Sum of Sq"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["F"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"84","2":"19467.69","3":"NA","4":"NA","5":"NA","6":"NA","_rn_":"1"},{"1":"78","2":"19275.39","3":"6","4":"192.3051","5":"0.1296973","6":"0.9922336","_rn_":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p><span style="font-size: 30 px;">📈</span><code>p-value</code>is
+larger thant 5%, we can’t reject <span
+class="math inline">\(\mathscr{H}_0\)</span>, we prefer for this test
+the smallest model. We can compare the RMSE on the Test sample.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[RMSE]</strong> </span></p>
+<p>Let <span
+class="math inline">\((X,Y)=\{(x_i,y_i)\}_{i=1,\cdots,n}\)</span> be the
+train sample and <span class="math inline">\(\widehat
+\beta(X,Y)\)</span> the OLSE computed on the train sample. Then, we can
+define the <strong>Root Mean Squared Error (RMSE)</strong></p>
+<ul>
+<li>On the <strong>train sample</strong> <span
+class="math inline">\((X,Y)=\{(x_i,y_i)\}_{i=1,\cdots,n}\)</span></li>
+</ul>
+<p><span class="math display">\[RMSE=\|Y-X \widehat
+\beta(X,Y)\|_n\]</span></p>
+<ul>
+<li>On the <strong>test sample</strong> (generalization performance)
+<span
+class="math inline">\((X_T,Y_T):=\{(X_t,Y_t)\}_{t=1,\cdots,T}\)</span>
+<span class="math display">\[RMSE=\|Y_T-X_T \widehat
+\beta(X,Y)\|_T\]</span></li>
+</ul>
+<p>where <span
+class="math inline">\(\|u\|_q=\sqrt{\frac{1}{q}\sum_{j=1}^qu_j^2}\)</span>
+for <span class="math inline">\(u\in\mathbb{R}^q\)</span>.</p>
+</div>
+<p><br></p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="fu">library</span>(Metrics)</span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a>mod<span class="ot">&lt;-</span><span class="fu">lm</span>(maxO3<span class="sc">~</span>.,<span class="at">data=</span>train)</span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>RMSE_full_train<span class="ot">=</span> <span class="fu">rmse</span>(train<span class="sc">$</span>maxO3,<span class="fu">predict</span>(mod, <span class="at">newdata =</span> train))</span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a>RMSE_full_test<span class="ot">=</span> <span class="fu">rmse</span>(test<span class="sc">$</span>maxO3,<span class="fu">predict</span>(mod, <span class="at">newdata =</span> test))</span>
+<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>RMSE_0_train<span class="ot">=</span> <span class="fu">rmse</span>(train<span class="sc">$</span>maxO3,<span class="fu">predict</span>(mod_0, <span class="at">newdata =</span> train))</span>
+<span id="cb55-7"><a href="#cb55-7" tabindex="-1"></a>RMSE_0_test<span class="ot">=</span> <span class="fu">rmse</span>(test<span class="sc">$</span>maxO3,<span class="fu">predict</span>(mod_0, <span class="at">newdata =</span> test))</span>
+<span id="cb55-8"><a href="#cb55-8" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" tabindex="-1"></a></span>
+<span id="cb55-10"><a href="#cb55-10" tabindex="-1"></a></span>
+<span id="cb55-11"><a href="#cb55-11" tabindex="-1"></a>RMSE_train<span class="ot">&lt;-</span><span class="fu">c</span>(RMSE_full_train,RMSE_0_train)</span>
+<span id="cb55-12"><a href="#cb55-12" tabindex="-1"></a>RMSE_test<span class="ot">&lt;-</span><span class="fu">c</span>(RMSE_full_test,RMSE_0_test)</span>
+<span id="cb55-13"><a href="#cb55-13" tabindex="-1"></a>RMSE<span class="ot">&lt;-</span><span class="fu">rbind.data.frame</span>(RMSE_train,RMSE_test)</span>
+<span id="cb55-14"><a href="#cb55-14" tabindex="-1"></a><span class="fu">names</span>(RMSE)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&#39;mod&#39;</span>,<span class="st">&#39;mod_0&#39;</span>)</span>
+<span id="cb55-15"><a href="#cb55-15" tabindex="-1"></a><span class="fu">row.names</span>(RMSE)<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&#39;Train&#39;</span>,<span class="st">&#39;Test&#39;</span>)</span>
+<span id="cb55-16"><a href="#cb55-16" tabindex="-1"></a>RMSE</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mod"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mod_0"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"14.716568","2":"14.789797","_rn_":"Train"},{"1":"9.007425","2":"8.553392","_rn_":"Test"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="outliers" class="section level1">
+<h1>6. Outliers</h1>
+<div id="discussion-1" class="section level2">
+<h2>6.1. Discussion</h2>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Outliers]</strong> </span></p>
+<p>An outlier is an atypical observation such that the response variable
+<span class="math inline">\(Y\)</span> and/or predictors <span
+class="math inline">\(X_j\)</span> appear to behave differently from the
+majority of observations.</p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> <strong>Outliers may occur for
+various reasons</strong></p>
+<ul>
+<li>obvious cases: measurement errors, data transcription
+errors,…<em>Example: a customer recorded to be 400 years old; a 1 year
+old baby running the 100m in 10 seconds…</em><br></li>
+<li>Adversarial error to scuttle the analysis.<br></li>
+<li>outlierssometimes reveal a particular phenomenon that may be
+different from the model followed by the majority of observations.
+<em>Example: gene expression in Cancer patient as compared to healthy
+individuals.</em><br></li>
+</ul>
+<p><span class="solution">📝</span> <strong>In the regression
+setting</strong>, an typical values (<em>outliers</em>) can occur in
+three main ways :</p>
+<ul>
+<li>in the response <span class="math inline">\(Y\)</span> but not in
+the predictors <span class="math inline">\(X_j\)</span>,</li>
+<li>in the predictors <span class="math inline">\(X_j\)</span> but not
+in the response variable <span class="math inline">\(Y\)</span>,</li>
+<li>in both <span class="math inline">\(Y\)</span> and <span
+class="math inline">\(X\)</span>.</li>
+</ul>
+<div id="a.-outlier-in-the-y-direction-but-not-in-the-predictors-x"
+class="section level4">
+<h4><span style="color: blue;"><strong>A. Outlier in the <span
+class="math inline">\(Y\)</span>-direction but not in the predictors
+<span class="math inline">\(X\)</span></strong></span></h4>
+<p><u><em>Exemple</em></u> Scatter plot of the toy dataset <span
+class="math inline">\(Y=(Y_1,\ldots,Y_n)^\top\)</span>. Boxplot reveals
+the outliers.</p>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-38-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><strong>Question</strong> what is the impact of this outlier on this
+regression model? We plot the two LSE regression lines</p>
+<ul>
+<li><strong>with</strong> the outlier: <span
+class="math inline">\(y=1.9254378x +-2.2701754\)</span>,</li>
+<li><strong>without</strong> the outlier: <span
+class="math inline">\(y=2.1061473x +-3.6203342\)</span>.</li>
+</ul>
+<p><span style="font-size: 30px;">📈</span> <strong>For THIS
+scenario</strong></p>
+<ul>
+<li>the outlier has only a small effect on the estimation. Indeed,
+removing this point slightly changes the regression line (least squares
+line).</li>
+<li>This type of atypical observations () has an impact on the
+estimation of <span class="math inline">\(\sigma^2\)</span> so on the
+residuals <span class="math inline">\(\widehat\epsilon=Y-\widehat
+Y\)</span>.</li>
+<li>The <strong>regression outliers</strong> can be detected by a
+residuals analysis.</li>
+</ul>
+</div>
+<div id="b.-outlier-out-of-domain-point" class="section level4">
+<h4><span style="color: blue;"><strong>B. Outlier out of domain
+point</strong></span></h4>
+<p><em>Isolated observation</em> has atypical values in the predictors
+<span class="math inline">\(X_{ij}\)</span>. It means that the values
+<span class="math inline">\(\left(X_{ij}\right)_j\)</span> of the
+observation <span class="math inline">\(i\)</span> are relatively far
+from all the value <span
+class="math inline">\(\left(X_{i&#39;j}\right)_j\)</span> of the other
+observations <span class="math inline">\(i&#39;\neq i\)</span>. We say
+this point is out of domain.</p>
+<p><u><em>Exemple</em></u> Let us consider an other toy example.</p>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-39-1.png" width="60%" /></p>
+<p><strong>Question</strong> what is the impact of this outlier on this
+regression model? We plot the two LSE regression lines</p>
+<ul>
+<li><strong>with</strong> the outlier: <span
+class="math inline">\(y=-0.8391409x +20.9530211\)</span>,</li>
+<li><strong>without</strong> the outlier: <span
+class="math inline">\(y=-1.8231533x +28.5839412\)</span>.</li>
+</ul>
+<p><span style="font-size: 30px;">📈</span> <strong>For THIS
+scenario</strong></p>
+<ul>
+<li>The isolated observation has a significant impact on the estimation
+of <span class="math inline">\(\beta\)</span>. Indeed, removing this
+point significantly changes the LSE regression line.</li>
+<li>The isolated observation is quite far from the regression line. It
+does not follow the general linear trend of the majority of
+observations.</li>
+<li>Such of points are called <strong>high leverage point</strong>.
+Statisticians are always wary of such points. Sometimes they do not
+significantly change the estimation of <span
+class="math inline">\(\beta\)</span> and sometimes they do.</li>
+<li><strong>Leverage points</strong> can be detected by a multivariate
+detection study of the <em>“leverage effect”.</em></li>
+</ul>
+</div>
+</div>
+<div id="regression-outliers" class="section level2">
+<h2>6.2. Regression outliers</h2>
+<p>The model may fail to correctly predict <span
+class="math inline">\(Y_i\)</span>, and then its standardized residual
+(or studentized residual) is large. Such an observation is called a
+regression outlier.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Regression
+outlier]</strong></span></p>
+<p>A <strong>regression outlier</strong> is an observation <span
+class="math inline">\((x_i^T,Y_i)\)</span> such that the associated
+studentized residual <span class="math inline">\(t_i^*\)</span> is high:
+<span class="math display">\[|t_i^*|&gt;
+t_{n-p-1,1-\alpha/2}.\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span><span class="solution">📝</span> Note
+that in theory, <span class="math inline">\(\alpha\%\)</span> of the
+data are outliers.<br> <span class="solution">📝</span> In practice, we
+use <span class="math inline">\(\alpha=5\%\)</span>, and for a large
+enough sample (larger than <span class="math inline">\(30 + p\)</span>),
+<span class="math inline">\(t_{n-p-1,1-\alpha/2} \approx 2\)</span>. We
+are actually looking for <span
+class="math inline">\((x_i^T,Y_i)\)</span> for which <span
+class="math inline">\(t_i^*\)</span> is <strong>well</strong> outside
+the confidence band in the <span class="math inline">\(i \longmapsto
+t_i^*\)</span> plot.<br> <span class="solution">📝</span> Explaining the
+presence of these outliers can be difficult. They may be caused by
+measurement errors or by a change in the population.<br> <span
+class="solution">📝</span> It is recommended to pay attention to these
+points and check whether they have too much influence on the calculation
+of <span class="math inline">\(\widehat{\beta}\)</span> and <span
+class="math inline">\(\widehat{\sigma}^2\)</span>.</p>
+<p>These observations can be identified on the
+<em>Studentized-plot</em>.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a><span class="fu">influenceIndexPlot</span>(mod_0,<span class="at">vars=</span><span class="st">&quot;Studentized&quot;</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-40-1.png" width="75%" /></p>
+<p><span style="font-size: 30px;">📈</span> **For the
+òzone<code>dataset**, only the points</code>34<code>et</code>58` are
+regression outliers.</p>
+</div>
+<div id="outliers-with-strong-leverage-on-themselves"
+class="section level2">
+<h2>6.3. Outliers with strong leverage on themselves</h2>
+<p>Consider the orthogonal projector <span
+class="math inline">\(P_X\)</span> onto <span
+class="math inline">\([X]\)</span> : <span
+class="math inline">\(P_X=X(X^\top X)^{-1}X^\top\)</span>. We defined
+<span class="math display">\[
+\widehat Y=X\widehat \beta=P_XY \ \text{where} \ P_W=[h_{ij}]_{1\leq
+i\leq n \\1\leq j\leq n} \ \text{is also called the hat matrix}
+\]</span></p>
+<br>
+<div class="brdblack">
+<p><span style="color: orange;"><strong>[Proposition 3]</strong>
+</span></p>
+<p>Note <span class="math inline">\(h_{ij}=(P_X)_{ij}\)</span>, the
+entries of <span class="math inline">\(P_X\)</span>. The trace of <span
+class="math inline">\(P_X\)</span> is equal to : <span
+class="math display">\[Tr(P_X)=\sum_{i=1}^nh_{ii}=p.\]</span> Moreover,
+for all <span class="math inline">\(i=i,\cdots,n\)</span> and for all
+<span class="math inline">\(j\not=i\)</span>,</p>
+<ul>
+<li><span class="math inline">\(0\leq h_{ii}\leq 1,\quad
+-\frac{1}{2}\leq h_{ij}\leq \frac{1}{2}.\)</span> <br></li>
+<li>If <span class="math inline">\(h_{ii}=1\)</span> then <span
+class="math inline">\(h_{ij}=0\)</span>.</li>
+</ul>
+</div>
+<p><br></p>
+<p><span class="solution">💡</span> <strong>Impact of the <span
+class="math inline">\(i\)</span>-observation on its own
+estimation</strong></p>
+<p>The predicted values <span class="math inline">\(\widehat
+y_i\)</span> can be written as a linear combination of all the
+observations <span class="math display">\[
+\widehat y_i=\sum_{j=1}^nh_{ij}y_j=h_{ii}y_i+\sum_{j\neq
+i\\j=1}^nh_{ij}y_j
+\]</span></p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Leverage effect on
+themselves]</strong> </span> An observation <span
+class="math inline">\(i\)</span> is called a <strong>leverage
+point</strong> if <span class="math inline">\(h_ {ii}&gt; s\)</span>,
+where</p>
+<ul>
+<li><span class="math inline">\(s=2p/n\)</span> according to Hoaglin
+&amp; Welsch (1978),</li>
+<li><span class="math inline">\(s=3p/n\)</span> for <span
+class="math inline">\(p&gt;6\)</span> and <span
+class="math inline">\((n-p)&gt;12\)</span> according to Velleman &amp;
+Welsch (1981),</li>
+<li><span class="math inline">\(s=1/2\)</span> according to Huber&amp;
+Welsch (1981).</li>
+</ul>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> Without necessarily being an
+<strong>regression outlier</strong> (residuals analysis), leverage
+points are atypical points in explanatory variables.<br> <span
+class="solution">📝</span> If an observation is such that <span
+class="math inline">\(h_ {ii}&gt; s\)</span>, it influences its own
+estimate.</p>
+<p>If an observation has a large influence on its own estimation <span
+class="math inline">\(\widehat{Y_i}\)</span>, it is said to have a
+strong leverage effect on its own estimation: <span
+class="math inline">\(\Rightarrow\)</span> In practice, the
+hat-<em>value</em> &gt; 0.5. These observations can be identified on the
+<em>Hat-plot</em>.”</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a><span class="fu">influenceIndexPlot</span>(mod_0,<span class="at">vars=</span><span class="st">&quot;hat&quot;</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-41-1.png" width="75%" /></p>
+<p><span style="font-size: 30px;">📈</span> <strong>For the
+òzone`dataset</strong>, none of the observations has a strong impact on
+its own estimation.</p>
+<div class="brdred">
+<p><span class="attention">⚠️</span> It is important to detect and
+analyze them: <em>Do they come from measurement errors or from a
+population of a different nature ?</em> We may not systematically
+eliminate them. <strong>But it does not necessarily affect the overall
+model</strong>, that is, the estimate of <span
+class="math inline">\(\beta\)</span>.</p>
+<div id="outliers-with-strong-leverage-on-the-model"
+class="section level2">
+<h2>6.4. Outliers with strong leverage on the model</h2>
+<p>An analysis of the influence (leverage effect) of an observation is
+based on the idea of comparing the adjustment with and without this
+observation. Note that it should be done for each observation in the
+dataset.</p>
+<p><span style="color: blue;"><u><strong>Estimation of <span
+class="math inline">\(\beta\)</span> without the <span
+class="math inline">\(i\)</span>-observation <span
+class="math inline">\((x_i,Y_i)\)</span></strong></u></span></p>
+<p><span class="probleme">📌</span> The index <span
+class="math inline">\(&quot;(-i)&quot;\)</span> means “without the <span
+class="math inline">\(i\)</span>-observation”. For example, the matrix
+<span class="math inline">\(X_{(-i)}\)</span> is the <span
+class="math inline">\((n-1)\times p\)</span> matrix corresponding to the
+matrix <span class="math inline">\(X\)</span> without the <span
+class="math inline">\(i\)</span>-<span class="math inline">\(th\)</span>
+line.<br> <span class="probleme">📌</span> Denote by <span
+class="math inline">\(\widehat{\beta}_{(-i)}\)</span> the OLSE computed
+from the dataset without the <span
+class="math inline">\(i\)</span>-observation: <span
+class="math display">\[\widehat\beta_{(-i)}=\left(X_{(-i)}^\top \,
+X_{(-i)}\right)^{-1}X^\top_{(-i)} \, Y_{(-i)}.\]</span></p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[LSE prediction for the <span
+class="math inline">\(i\)</span>-observation]</strong> </span> is
+defined by the following quantity <span class="math display">\[\widehat
+Y_i^P=x_i^\top \widehat\beta_{(-i)}.\]</span> <br> <span
+style="color: green;"><strong>[The associated prediction error]</strong>
+</span> is defined by the following quantity <span
+class="math display">\[Y_i-\widehat Y_i^P.\]</span></p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> If the <span
+class="math inline">\(i\)</span>-observation is not too influential, we
+expect that the residues in both cases to be close: <span
+class="math display">\[
+Y_i-\widehat Y_i \approx Y_i-\widehat Y_i^P.
+\]</span> <span class="solution">📝</span> If not, the <span
+class="math inline">\(i\)</span>-observation deserves special attention.
+<br> <span class="solution">📝</span> These two quantities are related
+to the orthogonal projector <span
+class="math inline">\(P_X\)</span>.</p>
+<br>
+<div class="brdblack">
+<p><span style="color: red;"><strong>[Theorem 2]</strong> </span> Assume
+<span class="math inline">\(X\)</span> is full rank and –. Then we have
+for all <span class="math inline">\(i=1,\cdots,n\)</span> <span
+class="math display">\[Y_i-\widehat Y_i=(1-h_{ii})(Y_i-\widehat Y_i^P),
+\]</span> where <span class="math inline">\(h_{ii}\)</span> denote the
+<span class="math inline">\(i\)</span>-<span
+class="math inline">\(th\)</span> diagonal element of <span
+class="math inline">\(P_X\)</span>.</p>
+</div>
+<p><span style="color: blue;"> <strong><em>Proof.</em></strong> </span>
+Let this be an exercise for you to do on your own.<span
+class="math inline">\(\square\)</span></p>
+<p><span class="solution">📝</span> <span
+class="math inline">\(h_{ii}\)</span> “corresponds” in a way to the
+distance of <span class="math inline">\(x_i\)</span> from the gravity
+center <span class="math inline">\(\bar x\)</span> of the scatter plot
+<span class="math inline">\(x_i\)</span>. <strong>The Leverage <span
+class="math inline">\(h_{ii}\)</span>’s tell us which observations are
+isolated from the rest of the sample</strong>.<br> <span
+class="solution">📝</span> If <span class="math inline">\(|hij|\)</span>
+is large then observation <span class="math inline">\(j\)</span> has a
+strong influence on the prediction <span class="math inline">\(\widehat
+y_i\)</span> and on its own predition for <span
+class="math inline">\(i=j\)</span>.<br> <span class="solution">📝</span>
+<span class="math inline">\(\widehat Y_i\)</span> is entirely determined
+by <span class="math inline">\(Y_i\)</span> as soon as <span
+class="math inline">\(h_{ii}=1\)</span>. <br> <span
+class="solution">📝</span> If <span
+class="math inline">\(h_{ii}=0\)</span>, <span
+class="math inline">\(Y_i\)</span> has no influence on <span
+class="math inline">\(\widehat Y_i\)</span>.<br> <span
+class="solution">📝</span> The prediction error (<span
+class="math inline">\(Y_i-\widehat Y_i\)</span>) and the associated
+prediction error (<span class="math inline">\(Y_i-\widehat
+Y_i^P\)</span>) are equal for <span
+class="math inline">\(h_{ii}=0\)</span>.</p>
+<p><span class="solution">💡</span> While the residuals analysis
+identifies atypical values related to the explained variable <span
+class="math inline">\(Y\)</span>, the analysis of <span
+class="math inline">\(P_X\)</span> detects atypical values related to
+predictors <span class="math inline">\(X_j\)</span>. But <strong>does
+such of point impact the estimation of <span
+class="math inline">\(\beta\)</span> (cook distance) ?</strong> The
+<strong>Cook’s distance</strong> combines these two analyzes. It is
+essentially a standardized distance measure that describes the change in
+the <span class="math inline">\(\beta\)</span> estimator when we remove
+the observation <span class="math inline">\(i\)</span>.</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>[Cook’s distance]</strong>
+</span></p>
+<p>For all <span class="math inline">\(i\)</span>, the Cook’s distance
+of the observation <span class="math inline">\((x^T_i,Y_i)\)</span> is
+given by the following formula : <span
+class="math display">\[D_i=\frac{1}{p\widehat\sigma^2}(\widehat\beta_{(-i)}-\widehat\beta)^T(X^TX)(\widehat\beta_{(-i)}-\widehat\beta)\]</span>
+where <span class="math inline">\(\widehat\beta_{(-i)}\)</span> is the
+estimation of <span class="math inline">\(\beta\)</span> in the model
+without the <span class="math inline">\(i\)</span>-<span
+class="math inline">\(th\)</span> observation.</p>
+</div>
+<p><br></p>
+<p><span class="solution">📝</span> With this definition, the Cook’s
+distance can be seen as a criterion measuring the leverage effect of the
+<span class="math inline">\(i\)</span>-observation on the model (so on
+<span class="math inline">\(\beta\)</span>) : distance between the 2
+models (with and without the <span
+class="math inline">\(i\)</span>-observation).</p>
+<br>
+<div class="brdblack">
+<p><span style="color: orange;"><strong>[Proposition 4]</strong>:
+</span></p>
+<p>The Cook’s distance of the observation <span
+class="math inline">\((x^T_i,Y_i)\)</span> satisfies <span
+class="math display">\[
+D_i=\frac{h_{ii}}{p\widehat\sigma^2(1-h_{ii})^2}(Y_i-\widehat
+Y_i)^2=\frac{h_{ii}}{p(1-h_{ii})}t_i^2
+\]</span> where <span class="math inline">\(h_{ii}\)</span> is the <span
+class="math inline">\(i\)</span>-<span class="math inline">\(th\)</span>
+diagonal element of the orthogonal projector <span
+class="math inline">\(P_X\)</span> and <span
+class="math inline">\(t_i\)</span> is the standardized residual
+associated to the observation <span
+class="math inline">\(i\)</span>.</p>
+</div>
+<p><br> <span style="color: blue;"> <strong><em>Proof.</em></strong>
+</span> Let this be an exercise for you to do on your own.<span
+class="math inline">\(\square\)</span></p>
+<p><span class="solution">📝</span> With this proposition, The Cook’s
+distance can be seen as a criterion measuring both the character of the
+<span class="math inline">\(i\)</span>-observation (measured by its
+standardized residual)<br> <span class="solution">📝</span> The Cook’s
+distance can be large if the standardized residues are large or if the
+levers are large (or if both are large).</p>
+<br>
+<div class="brdgreen">
+<p><span style="color: green;"><strong>Leverage effect on the
+model</strong> </span> A high value of Cook’s distance suggests that
+observation <span class="math inline">\(i\)</span> has a high influence
+(in practice compared to 1).</p>
+<ul>
+<li><span class="math inline">\(D_i&lt;1\)</span> suggests small impact
+of <span class="math inline">\(i\)</span>-observation.</li>
+<li><span class="math inline">\(D_i&gt;1\)</span> suggests high impact
+of <span class="math inline">\(i\)</span>-observation.</li>
+</ul>
+</div>
+<p><br></p>
+<p><span style="font-size: 30 px;">🧠</span> <strong>What to do with
+outliers? Should we manage, remove, or keep them?</strong></p>
+<p>These outliers can be identified on the <em>Cook’s-plot</em>.”</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="fu">influenceIndexPlot</span>(mod_0,<span class="at">vars=</span><span class="st">&quot;cook&quot;</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-42-1.png" width="75%" /></p>
+<p><span style="font-size: 30px;">📈</span> <strong>For the
+òzone`dataset</strong>, none of the observations has a Cook’s distance
+larger than 1.</p>
+<p><span class="solution">📝</span> Note also that you can get this plot
+with <code>àutoplot(mod_0,1:4)</code></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
+<span id="cb59-2"><a href="#cb59-2" tabindex="-1"></a><span class="fu">autoplot</span>(mod_0,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-43-1.png" width="75%" /></p>
+</div>
+<div id="handling-of-outliers" class="section level2">
+<h2>6.5. Handling of outliers</h2>
+<p>The <strong>studentized residuals</strong> value of <span
+class="math inline">\(t^*_i\)</span> measures how far observation <span
+class="math inline">\(i\)</span> deviates from the prediction in terms
+of standard deviation <span class="math display">\[
+t^*_i=\frac{\widehat\epsilon_i}{\widehat\sigma_{(-i)}\sqrt{1-h_{ii}}}.
+\]</span> If <span class="math inline">\(|t^*_i|\)</span> is very large,
+it suggests that the observation is potentially an outlier:</p>
+<div class="brdred">
+<p><span style="color: green;"><strong>[Testing outilers]</strong>
+</span></p>
+<p>The <code>outlierTest()</code> function in R (from the
+<code>car</code> package) is designed to identify
+<strong>outliers</strong> in the context of a linear regression model.
+It is based on the analysis of <strong>studentized residuals</strong>,
+taking into account the influence of other data points in the model
+<span class="math display">\[\mathscr{H}_0 \ : \  \text{No outliers
+exist.}  \qquad vs  \qquad \mathscr{H}_1 \ : \  \text{Observation i is
+an outlier if }t^*_i \ \text{is significant.}\]</span></p>
+<p>The <strong>Bonferroni test</strong> is used to adjust the p-values
+obtained from individual tests on each observation. When identifying
+outliers, each observation <span class="math inline">\(i\)</span> is
+tested to see if it is an outlier based on its studentized residual
+<span class="math inline">\(t_i\)</span>. To account for multiple tests
+(one for each observation), the <em>p-value</em> is adjusted using the
+<strong>Bonferroni correction.</strong> It is a robust tool for
+detecting influential or aberrant observations in linear regression
+models.</p>
+</div>
+<p><br></p>
+<p><span style="font-size: 30 px;">✅ </span> The idea behind the
+<strong>Bonferroni adjustment</strong> is to correct for multiple
+comparisons by reducing the chance of false positives. In a dataset with
+<span class="math inline">\(n\)</span> observations, <span
+class="math inline">\(n\)</span> tests are performed to identify an
+outlier, increasing the likelihood of finding one simply by chance. The
+Bonferroni correction divides the significance threshold <span
+class="math inline">\(\alpha\)</span> by the number of tests <span
+class="math inline">\(n\)</span>. Thus, an adjusted Bonferroni
+<em>p-value</em> is calculated by: <span class="math display">\[
+p_v^{\text{unadjusted}} = p_v \times n
+\]</span></p>
+<p>The <code>outlierTest()</code> returns observations with
+significantly small p-values after adjustment, indicating that these
+observations are outliers.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="fu">outlierTest</span>(mod_0)</span></code></pre></div>
+<pre><code>##     rstudent unadjusted p-value Bonferroni p
+## 58 -3.974282          0.0001499     0.013341</code></pre>
+<p><span style="font-size: 30 px;">📈</span>.</p>
+<p>The observation <code>58</code>has the smallest <em>Bonferroni
+p-value</em>, with a <code>pvalue</code>smaller than 5%, therefore the
+observation <code>58</code>is an outlier.</p>
+<p><span class="probleme">📌</span> <code>rstudent</code>=-3.9742823 the
+value <span class="math inline">\(t^*_{58}\)</span>, it indicates that
+this observation is approximately 3.97 standard deviations below the
+prediction. In a normal distribution, this suggests that the observation
+is rare and could be considered an outlier. <br> <span
+class="probleme">📌</span>
+<code>unadjusted p-value</code>=1.4989805^{-4} : This is the
+<strong>unadjusted p-value</strong> associated with testing whether the
+observation <code>58</code> is an outlier. It represents the probability
+that this observation is an outlier <strong>under the null
+hypothesis</strong> (i.e., assuming no outliers in the data). It means
+that there’s about a <strong>0.01499 % of chance</strong> of observing a
+residual this extreme under the null hypothesis. This would suggest that
+<code>58</code> could be an outlier, if no correction for multiple
+testing was applied.<br> <span
+class="probleme">📌</span><code>Bonferroni p</code>=0.0133409 After
+applying the Bonferroni correction, the observation is still considered
+a significant outlier at the 5% level, but it is no longer considered a
+significant outlier at the 1% level.</p>
+<p><span class="solution">✍</span> Note that you can display 4 plot with
+<code>influenceIndexPlot(mod_0)</code></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="fu">influenceIndexPlot</span>(mod_0)</span></code></pre></div>
+<p><img src="Lecture1_Lin_model_files/figure-html/unnamed-chunk-46-1.png" width="75%" /></p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "Lecture1_Lin_model_files/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
